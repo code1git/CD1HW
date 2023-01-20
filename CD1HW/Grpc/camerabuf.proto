@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Grpc";
+
+package camerabuf;
+
+service Camerabuf {
+    rpc SendCameraframe (CamerabufRequest) returns (CamerabufSendFrame) {}
+    rpc SendCameraframePysv (CamerabufSendFrame) returns (CamerabufRequest) {}
+}
+
+message CamerabufRequest {
+    string flag = 1;
+}
+
+message CamerabufSendFrame {
+    string base64img =1;
+}
