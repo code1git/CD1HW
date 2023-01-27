@@ -1,4 +1,5 @@
-﻿using CD1HW.Hardware;
+﻿using System.IO;
+using CD1HW.Hardware;
 using CD1HW.Model;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using OpenCvSharp;
 
 namespace CD1HW.Controllers
 {
@@ -50,17 +52,15 @@ namespace CD1HW.Controllers
         public string OcrReset()
         {
             AppSettings appSettings = AppSettings.Instance;
-            lock (appSettings)
-            {
-                appSettings.name = null;
-                appSettings.addr = null;
-                appSettings.birth = null;
+            appSettings.id_card_type = null;
+            appSettings.name = null;
+            appSettings.addr = null;
+            appSettings.birth = null;
 
-                appSettings.birth_img = null;
-                appSettings.face_img = null;
-                appSettings.name_img = null;
-                appSettings.regnum_img = null;
-            }
+            appSettings.birth_img = null;
+            appSettings.face_img = null;
+            appSettings.name_img = null;
+            appSettings.regnum_img = null;
             return "ocr reset";
         }
 
@@ -77,6 +77,8 @@ namespace CD1HW.Controllers
                     appSettings.name = ocrResult.name;
                     appSettings.addr = ocrResult.addr;
                     appSettings.birth = ocrResult.birth;
+                    appSettings.id_card_type = ocrResult.id_card_type;
+                    appSettings.issue_date = ocrResult.issue_date;
 
                 }
 
@@ -91,6 +93,70 @@ namespace CD1HW.Controllers
 
             }
             return "ocr reset";
+        }
+
+        [HttpPost("/call_finger")]
+        public string callFinger(OcrResult ocrMsg)
+        {
+            AppSettings appSettings = AppSettings.Instance;
+            byte[] fingerScanImg = null;
+            FingerPrintScanner fingerPrintScanner = FingerPrintScanner.Instance;
+            Thread fingerprintThread = new Thread(delegate () { fingerScanImg = fingerPrintScanner.ScanFinger(); });
+            fingerprintThread.Start();
+            while (fingerScanImg == null)
+            {
+                // wait any one end
+            }
+            appSettings.finger_img = Convert.ToBase64String(fingerScanImg);
+            return appSettings.finger_img;
+        }
+
+        [HttpPost("/call_pad")]
+        public string callPad(OcrResult ocrMsg)
+        {
+            AppSettings appSettings = AppSettings.Instance;
+            string TEMP_DIR = ".\\temp\\";
+            if (!Directory.Exists(TEMP_DIR))
+                Directory.CreateDirectory(TEMP_DIR);
+            string filename = Path.GetRandomFileName();
+            string signPadImgPath = Path.Combine(TEMP_DIR, filename);
+            byte[] fingerScanImg = null;
+            FingerPrintScanner fingerPrintScanner = FingerPrintScanner.Instance;
+            Thread fingerprintThread = new Thread(delegate () { fingerScanImg = fingerPrintScanner.ScanFinger(); });
+            fingerprintThread.Start();
+
+            //Signpad.CallSignPadEvent(ocrMsg.name, ocrMsg.birth, ocrMsg.addr, signPadImgPath, fingerprintThread);
+
+            while (fingerScanImg == null && !System.IO.File.Exists(Path.Combine(TEMP_DIR, filename)))
+            {
+                // wait any one end
+            }
+            try
+            {
+                //
+                // sign pad를 우선처리 (지문 터치센서의 오인식 가능성이 있음으로)
+                if (System.IO.File.Exists(signPadImgPath))
+                {
+                    Thread.Sleep(500);
+
+                    using (FileStream fs = new FileStream(signPadImgPath, FileMode.Open, FileAccess.Read))
+                    {
+                        byte[] signPadImg = new byte[fs.Length];
+                        fs.Read(signPadImg, 0, signPadImg.Length);
+                        fs.Close();
+                        appSettings.sign_img = Convert.ToBase64String(signPadImg);
+                    }
+                }
+                // 지문이미지 처리
+                else if (fingerScanImg != null)
+                {
+                    appSettings.finger_img = Convert.ToBase64String(fingerScanImg);
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return "singpad / fingerprint scanner";
         }
     }
 }

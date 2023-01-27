@@ -16,7 +16,6 @@ namespace CD1HW.Hardware
 
         private void CaptureCameraCallback()
         {
-
             /*string[] supportCamList = { "OSID-SQ100", "OSID-100", "OSID-100", "SF5A136", "ODI-100", "WebCam SCB-0350M" };
             string[] camList = ListOfAttachedCameras();
 
@@ -32,8 +31,8 @@ namespace CD1HW.Hardware
             }*/
             AppSettings appSettings = AppSettings.Instance;
             int camIdx = 0;
-            capture = new VideoCapture();
             Mat frame = new Mat();
+            capture = new VideoCapture();
             while (true)
             {
                 try
@@ -41,16 +40,14 @@ namespace CD1HW.Hardware
                     
                     try
                     {
-                        lock (capture)
+                        lock(capture)
                         {
-
-                            if (!capture.IsOpened())
+                            if (capture==null || !capture.IsOpened())
                             {
-                                lock(appSettings)
-                                {
-                                    camIdx = appSettings.camIdx;
-                                }
-                                capture.Open(camIdx, VideoCaptureAPIs.ANY);
+                                Console.WriteLine("try open camera");
+                                camIdx = appSettings.camIdx;
+                                Console.WriteLine(camIdx);
+                                capture.Open(camIdx, appSettings.cameraBackEnd);
                                 capture.FrameWidth = 1920;
                                 capture.FrameHeight = 1440;
                                 capture.Fps = 30;
@@ -60,33 +57,48 @@ namespace CD1HW.Hardware
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine(e.ToString());
                     }
                     if (frame.Size().Width != 0 && frame.Size().Height != 0)
                     {
                         try
                         {
-                            Mat dst = new Mat();
-                            Mat matrix = Cv2.GetRotationMatrix2D(new Point2f(frame.Width / 2, frame.Height / 2), 180.0, 1.0);
-                            Cv2.WarpAffine(frame, dst, matrix, new OpenCvSharp.Size(frame.Width, frame.Height));
-                            Bitmap bitmapImage = BitmapConverter.ToBitmap(dst);
+                            //Console.WriteLine(frame.Size());
+                            Mat src = new Mat();
+                            if (appSettings.camera_rotate != 0)
+                            {
+                                Mat matrix = Cv2.GetRotationMatrix2D(new Point2f(frame.Width / 2, frame.Height / 2), appSettings.camera_rotate, 1.0);
+                                Cv2.WarpAffine(frame, src, matrix, new OpenCvSharp.Size(frame.Width, frame.Height));
+                            }
+                            if (appSettings.camera_crop)
+                            {
+                                float cropLeft = src.Width * 0.2f;
+                                float cropRight = src.Width * 0.2f;
+                                float cropTop = src.Height * 0.1f;
+                                float cropBotom = src.Height * 0.1f;
+                                Rect cropRectangle = new Rect((int) cropLeft, (int) cropTop, (int)(src.Width - cropLeft - cropRight), (int) (src.Height - cropTop - cropBotom));
+                                src = src.SubMat(cropRectangle);
+                            }
+                            Bitmap bitmapImage = BitmapConverter.ToBitmap(src);
+
                             MemoryStream memoryStream = new MemoryStream();
                             bitmapImage.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
                             byte[] imgBuf = memoryStream.ToArray();
                             
-                            lock (appSettings)
-                            {
-                                appSettings.imgBase64Str = Convert.ToBase64String(imgBuf);
-                                appSettings.cameraBitmap = bitmapImage;
-                            }
+                            
+                            appSettings.imgBase64Str = Convert.ToBase64String(imgBuf);
+                            appSettings.cameraBitmap = bitmapImage;
                         }
                         catch (Exception e)
                         {
+                            Console.WriteLine(e.ToString());
                         }
                     }
 
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e.ToString());
                 }
             }
         }
@@ -101,8 +113,17 @@ namespace CD1HW.Hardware
         {
             lock (capture)
             {
-                Console.WriteLine("camera close");
-                capture.Release();
+                Console.WriteLine("camera closing");
+                if(capture.IsEnabledDispose)
+                {
+                    capture.Dispose();
+                    capture = new VideoCapture();
+                    Console.WriteLine("camera closed");
+                }
+                else
+                {
+                    Console.WriteLine("camera close fail");
+                }
             }
         }
 

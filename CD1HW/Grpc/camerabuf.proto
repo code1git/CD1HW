@@ -14,5 +14,6 @@ message CamerabufRequest {
 }
 
 message CamerabufSendFrame {
-    string base64img =1;
+    string base64img = 1;
+    int32 manual_flag = 2;
 }

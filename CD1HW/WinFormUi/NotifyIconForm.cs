@@ -1,4 +1,5 @@
 ﻿using CD1HW.Hardware;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,7 +43,7 @@ namespace CD1HW.WinFormUi
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = new AppSettings();
+            AppSettings appSettings = AppSettings.Instance;
             appSettings.camIdx = 0;
             Cv2Camera cv2Camera = Cv2Camera.Instance;
             lock(cv2Camera)
@@ -53,7 +54,7 @@ namespace CD1HW.WinFormUi
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = new AppSettings();
+            AppSettings appSettings = AppSettings.Instance;
             appSettings.camIdx = 1;
             Cv2Camera cv2Camera = Cv2Camera.Instance;
             lock (cv2Camera)
@@ -64,13 +65,25 @@ namespace CD1HW.WinFormUi
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = new AppSettings();
+            AppSettings appSettings = AppSettings.Instance;
             appSettings.camIdx = 2;
             Cv2Camera cv2Camera = Cv2Camera.Instance;
             lock (cv2Camera)
             {
                 cv2Camera.ResetCamera();
             }
+        }
+
+        private void dSSHOWToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings appSettings = AppSettings.Instance;
+            appSettings.cameraBackEnd = VideoCaptureAPIs.DSHOW;
+        }
+
+        private void mSMFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings appSettings = AppSettings.Instance;
+            appSettings.cameraBackEnd = VideoCaptureAPIs.MSMF;
         }
     }
 }

@@ -17,6 +17,7 @@ namespace CD1HW.Grpc
             lock(appSettings)
             {
                 frame.Base64Img = appSettings.imgBase64Str;
+                frame.ManualFlag = 0;
             }
             return Task.FromResult(frame);
         }

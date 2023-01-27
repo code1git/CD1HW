@@ -10,7 +10,7 @@ UiThread.Start();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<AppSettings>();
+//builder.Services.AddSingleton<FingerPrintScanner>();
 
 // Add services to the container.
 builder.Services.AddControllers();

@@ -32,11 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NotifyIconForm));
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.dSSHOWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mSMFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,24 +53,19 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem,
-            this.selectCameraToolStripMenuItem});
+            this.selectCameraToolStripMenuItem,
+            this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(148, 48);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // selectCameraToolStripMenuItem
             // 
             this.selectCameraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2,
             this.toolStripMenuItem3,
-            this.toolStripMenuItem4});
+            this.toolStripMenuItem4,
+            this.dSSHOWToolStripMenuItem,
+            this.mSMFToolStripMenuItem});
             this.selectCameraToolStripMenuItem.Name = "selectCameraToolStripMenuItem";
             this.selectCameraToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.selectCameraToolStripMenuItem.Text = "select camera";
@@ -93,6 +90,27 @@
             this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "2";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            // 
+            // dSSHOWToolStripMenuItem
+            // 
+            this.dSSHOWToolStripMenuItem.Name = "dSSHOWToolStripMenuItem";
+            this.dSSHOWToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dSSHOWToolStripMenuItem.Text = "DSHOW";
+            this.dSSHOWToolStripMenuItem.Click += new System.EventHandler(this.dSSHOWToolStripMenuItem_Click);
+            // 
+            // mSMFToolStripMenuItem
+            // 
+            this.mSMFToolStripMenuItem.Name = "mSMFToolStripMenuItem";
+            this.mSMFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mSMFToolStripMenuItem.Text = "MSMF";
+            this.mSMFToolStripMenuItem.Click += new System.EventHandler(this.mSMFToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // NotifyIconForm
             // 
@@ -119,5 +137,7 @@
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripMenuItem toolStripMenuItem3;
         private ToolStripMenuItem toolStripMenuItem4;
+        private ToolStripMenuItem dSSHOWToolStripMenuItem;
+        private ToolStripMenuItem mSMFToolStripMenuItem;
     }
 }

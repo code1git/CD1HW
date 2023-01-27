@@ -39,30 +39,144 @@ namespace CD1HW.WinFormUi
                 try
                 {
                     AppSettings appSettings = AppSettings.Instance;
-                    lock(appSettings)
+                    Bitmap cameraBitmap = appSettings.cameraBitmap;
+                    if (cameraBitmap != null)
                     {
-                        Bitmap cameraBitmap = appSettings.cameraBitmap;
-                        if (cameraBitmap != null)
+                        if (camera_image1.InvokeRequired)
                         {
-                            Console.WriteLine(cameraBitmap.ToString());
-                            if (camera_image1.InvokeRequired)
-                            {
-                                //camera_image1.Invoke(new MethodInvoker(delegate { camera_image1.Image = bitmapImage; }));
-                                camera_image1.Invoke(new MethodInvoker(delegate { camera_image1.Image = cameraBitmap; }));
-                            }
-                            else
-                            {
-                                //camera_image1.Image = bitmapImage;
-                                camera_image1.Image = cameraBitmap;
-                            }
-
+                            //camera_image1.Invoke(new MethodInvoker(delegate { camera_image1.Image = bitmapImage; }));
+                            camera_image1.Invoke(new MethodInvoker(delegate { camera_image1.Image = cameraBitmap; }));
                         }
                         else
                         {
-                            //init camera image
+                            //camera_image1.Image = bitmapImage;
+                            camera_image1.Image = cameraBitmap;
+                        }
+                        
+ 
+                    }
+                    else
+                    {
+                        //init camera image
 
+                    }
+                    if (appSettings.id_card_type != null)
+                    {
+                        string idCardType = "";
+                        switch (appSettings.id_card_type)
+                        {
+                            case "jumin_card":
+                                idCardType = "주민등록증";
+                                break;
+                            case "driver_card":
+                                idCardType = "운전면허증";
+                                break;
+                            case "welfare_card":
+                                idCardType = "복지카드";
+                                break;
+                            case "alien_card":
+                                idCardType = "외국인등록증";
+                                break;
+                            case "overseas_card":
+                                idCardType = "국내거소신고증";
+                                break;
+                            default:
+                                break;
+                        }
+                        if (textBox_idcard_type.InvokeRequired)
+                        {
+                            textBox_idcard_type.Invoke(new MethodInvoker(delegate { textBox_name.Text = idCardType; }));
+                        }
+                        else
+                        {
+                            textBox_idcard_type.Text = idCardType;
                         }
                     }
+                    if (appSettings.name != null)
+                    {
+                        if (textBox_name.InvokeRequired)
+                        {
+                            textBox_name.Invoke(new MethodInvoker(delegate { textBox_name.Text = appSettings.name; }));
+                        }
+                        else
+                        {
+                            textBox_name.Text = appSettings.name;
+                        }
+                    }
+                    if (appSettings.regnum != null)
+                    {
+                        try
+                        {
+                            string[] regnumArr = appSettings.regnum.Split('-');
+                            if (textBox_regnum.InvokeRequired)
+                            {
+                                textBox_regnum.Invoke(new MethodInvoker(delegate { textBox_regnum.Text = regnumArr[0]; }));
+                            }
+                            else
+                            {
+                                textBox_regnum.Text = regnumArr[0];
+                            }
+                            if (textBox_regnum2.InvokeRequired)
+                            {
+                                textBox_regnum2.Invoke(new MethodInvoker(delegate { textBox_regnum.Text = regnumArr[1]; }));
+                            }
+                            else
+                            {
+                                textBox_regnum2.Text = regnumArr[1];
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    if (appSettings.addr != null)
+                    {
+                        if (richTextBox_addr.InvokeRequired)
+                        {
+                            richTextBox_addr.Invoke(new MethodInvoker(delegate { textBox_name.Text = appSettings.addr; }));
+                        }
+                        else
+                        {
+                            richTextBox_addr.Text = appSettings.addr;
+                        }
+                    }
+                    if (appSettings.issue_date != null)
+                    {
+                        try
+                        {
+                            string[] issueDateArr = appSettings.issue_date.Split('-');
+                            if (textBox_issue_date_yyyy.InvokeRequired)
+                            {
+                                textBox_issue_date_yyyy.Invoke(new MethodInvoker(delegate { textBox_issue_date_yyyy.Text = issueDateArr[0]; }));
+                            }
+                            else
+                            {
+                                textBox_issue_date_yyyy.Text = issueDateArr[0];
+                            }
+                            if (textBox_issue_date_MM.InvokeRequired)
+                            {
+                                textBox_issue_date_MM.Invoke(new MethodInvoker(delegate { textBox_issue_date_MM.Text = issueDateArr[1]; }));
+                            }
+                            else
+                            {
+                                textBox_issue_date_MM.Text = issueDateArr[1];
+                            }
+                            if (textBox_issue_date_dd.InvokeRequired)
+                            {
+                                textBox_issue_date_dd.Invoke(new MethodInvoker(delegate { textBox_issue_date_dd.Text = issueDateArr[2]; }));
+                            }
+                            else
+                            {
+                                textBox_issue_date_dd.Text = issueDateArr[2];
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    Thread.Sleep(15);
+                    
                 }
                 catch (Exception)
                 {

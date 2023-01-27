@@ -79,6 +79,10 @@
               "target": "Package",
               "version": "[4.6.0.20220608, )"
             },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[6.1.0, )"
+            },
             "SharpDX": {
               "target": "Package",
               "version": "[4.2.0, )"
