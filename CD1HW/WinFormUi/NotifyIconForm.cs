@@ -3,6 +3,7 @@ using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -15,16 +16,19 @@ namespace CD1HW.WinFormUi
     public partial class NotifyIconForm : Form
     {
         private DemoUI demoUI;
-        public NotifyIconForm()
+        private readonly Cv2Camera _cv2Camera;
+        private readonly OcrCamera _ocrCamera;
+        public NotifyIconForm(Cv2Camera cv2Camera, OcrCamera ocrCamera)
         {
             InitializeComponent();
-            demoUI = new DemoUI();
-            //demoUI.TopLevel = false;
-            //this.Controls.Add(demoUI);
-            //demoUI.ControlBox = false;
-            //demoUI.ShowInTaskbar= true;
-            //demoUI.Opacity= 100;
-            demoUI.Show();
+            _cv2Camera = cv2Camera;
+            _ocrCamera = ocrCamera;
+
+            if (_ocrCamera.DemoUIOnStart)
+            {
+                demoUI = new DemoUI(ocrCamera);
+                demoUI.Show();
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -34,56 +38,48 @@ namespace CD1HW.WinFormUi
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if(demoUI == null || demoUI.IsDisposed)
+            if (demoUI == null || demoUI.IsDisposed)
             {
-                demoUI = new DemoUI();
+                demoUI = new DemoUI(_ocrCamera);
                 demoUI.Show();
             }
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = AppSettings.Instance;
-            appSettings.camIdx = 0;
-            Cv2Camera cv2Camera = Cv2Camera.Instance;
-            lock(cv2Camera)
+            _ocrCamera.CamIdx = 0;
+            lock(_cv2Camera)
             {
-                cv2Camera.ResetCamera();
+                _cv2Camera.ResetCamera();
             }
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = AppSettings.Instance;
-            appSettings.camIdx = 1;
-            Cv2Camera cv2Camera = Cv2Camera.Instance;
-            lock (cv2Camera)
+            _ocrCamera.CamIdx = 1;
+            lock (_cv2Camera)
             {
-                cv2Camera.ResetCamera();
+                _cv2Camera.ResetCamera();
             }
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = AppSettings.Instance;
-            appSettings.camIdx = 2;
-            Cv2Camera cv2Camera = Cv2Camera.Instance;
-            lock (cv2Camera)
+            _ocrCamera.CamIdx = 2;
+            lock (_cv2Camera)
             {
-                cv2Camera.ResetCamera();
+                _cv2Camera.ResetCamera();
             }
         }
 
         private void dSSHOWToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = AppSettings.Instance;
-            appSettings.cameraBackEnd = VideoCaptureAPIs.DSHOW;
+            _ocrCamera.CameraBackEnd = VideoCaptureAPIs.DSHOW;
         }
 
         private void mSMFToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings appSettings = AppSettings.Instance;
-            appSettings.cameraBackEnd = VideoCaptureAPIs.MSMF;
+            _ocrCamera.CameraBackEnd = VideoCaptureAPIs.MSMF;
         }
     }
 }

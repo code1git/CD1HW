@@ -66,7 +66,7 @@ namespace CD1HW.Hardware
                     int result = 0;
                     while (result != 1 && isRunning)
                     {
-                        Thread.Sleep(250);
+                        Thread.Sleep(500);
                         result = IZZIX.GetFinger(0, (byte*)pRawImageData, (byte*)pFeature);
                     }
                     if (isRunning)
@@ -110,6 +110,10 @@ namespace CD1HW.Hardware
                         fs.Write(imgBuffer, 0, width*height);
                         fs.Close();*/
                     }
+                }
+                catch (ThreadInterruptedException e)
+                {
+                    
                 }
                 catch (Exception e)
                 {

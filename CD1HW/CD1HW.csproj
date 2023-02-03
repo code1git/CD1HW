@@ -17,6 +17,7 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Google.Protobuf" Version="3.21.12" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.51.0" />
@@ -24,19 +25,41 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="NAudio" Version="2.1.0" />
-    <PackageReference Include="OpenCvSharp4" Version="4.6.0.20220608" />
-    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.6.0.20220608" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.6.0.20220608" />
+    <PackageReference Include="OpenCvSharp4" Version="4.7.0.20230115" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.7.0.20230115" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.7.0.20230115" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="stdole" Version="7.0.3303" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.IO.Ports" Version="7.0.0" />
     <PackageReference Include="System.Text.Json" Version="7.0.1" />	
   </ItemGroup>
 	
   <ItemGroup>
+    <Reference Include="Florentis.InteropAxFlSigCOM">
+      <HintPath>C:\Program Files\Common Files\WacomGSS\Florentis.InteropAxFlSigCOM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Florentis.InteropAxFlWizCOM">
+      <HintPath>C:\Program Files\Common Files\WacomGSS\Florentis.InteropAxFlWizCOM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Florentis.InteropFlSigCapt">
+      <HintPath>C:\Program Files\Common Files\WacomGSS\Florentis.InteropFlSigCapt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Florentis.InteropFlSigCOM">
+      <HintPath>C:\Program Files\Common Files\WacomGSS\Florentis.InteropFlSigCOM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Florentis.InteropFlWizCOM">
+      <HintPath>C:\Program Files\Common Files\WacomGSS\Florentis.InteropFlWizCOM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="IzzixWarp">
       <HintPath>..\..\IzzixWarp\build\x64\Release\IzzixWarp.dll</HintPath>
       <Private>True</Private>
@@ -56,6 +79,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Update="Izzix32_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="izzixOEMAPI32_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

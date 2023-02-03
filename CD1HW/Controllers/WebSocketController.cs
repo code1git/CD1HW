@@ -16,10 +16,12 @@ namespace WebSocketsSample.Controllers;
 public class WebSocketController : ControllerBase
 {
     private readonly ILogger<WebSocketController> _logger;
+    private readonly OcrCamera _appSettings;
 
-    public WebSocketController(ILogger<WebSocketController> logger)
+    public WebSocketController(ILogger<WebSocketController> logger, OcrCamera appSettings)
     {
         _logger = logger;
+        _appSettings = appSettings;
     }
 
     [HttpGet("/ws")]
@@ -36,7 +38,6 @@ public class WebSocketController : ControllerBase
             }
             catch (Exception e)
             {
-
                 Console.WriteLine(e);
             }
         }
@@ -48,7 +49,7 @@ public class WebSocketController : ControllerBase
     }
     // </snippet>
 
-    private static async Task StreamCamera(WebSocket webSocket)
+    private async Task StreamCamera(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
         var receiveResult = await webSocket.ReceiveAsync(
@@ -58,16 +59,17 @@ public class WebSocketController : ControllerBase
         {
             //byte[] msgBuf = Encoding.UTF8.GetBytes(AppSettings.imgBase64Str);
             WsMsg wsMsg = new WsMsg();
-            AppSettings appSettings = AppSettings.Instance;
-            lock (appSettings)
+            //AppSettings appSettings = AppSettings.Instance;
+            lock (_appSettings)
             {
-                wsMsg.imgBase64Str = appSettings.imgBase64Str;
-                wsMsg.name = appSettings.name;
-                wsMsg.addr = appSettings.addr;
-                wsMsg.birth = appSettings.birth;
-                wsMsg.name_img = appSettings.name_img;
-                wsMsg.regnum_img = appSettings.regnum_img;
-                wsMsg.face_img = appSettings.face_img;   
+                wsMsg.imgBase64Str = _appSettings.imgBase64Str;
+                wsMsg.name = _appSettings.name;
+                wsMsg.regnum = _appSettings.regnum;
+                wsMsg.addr = _appSettings.addr;
+                wsMsg.birth = _appSettings.birth;
+                wsMsg.name_img = _appSettings.name_img;
+                wsMsg.regnum_img = _appSettings.regnum_img;
+                wsMsg.face_img = _appSettings.face_img;   
             }
             byte[] msgBuf = JsonSerializer.SerializeToUtf8Bytes<WsMsg>(wsMsg);
 

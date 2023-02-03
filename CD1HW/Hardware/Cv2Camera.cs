@@ -4,18 +4,27 @@ using System.Drawing;
 using SharpDX.MediaFoundation;
 using Microsoft.Extensions.Logging;
 using CD1HW.Grpc;
+using WebSocketsSample.Controllers;
 
 namespace CD1HW.Hardware
 {
     public sealed class Cv2Camera
     {
-        private static readonly Lazy<Cv2Camera> _insteance = new Lazy<Cv2Camera>(() => new Cv2Camera());
-        public static Cv2Camera Instance { get { return _insteance.Value; } }
+        private readonly ILogger<Cv2Camera> _logger;
+        private readonly OcrCamera _appSettings;
+        public Cv2Camera(ILogger<Cv2Camera> logger, OcrCamera appSettings)
+        {
+            _logger = logger;
+            _appSettings = appSettings;
+        }
+        //private static readonly Lazy<Cv2Camera> _insteance = new Lazy<Cv2Camera>(() => new Cv2Camera());
+        //public static Cv2Camera Instance { get { return _insteance.Value; } }
         private static Thread cameraThread;
         private VideoCapture capture;
 
         private void CaptureCameraCallback()
         {
+            //_logger.LogDebug("#########");
             /*string[] supportCamList = { "OSID-SQ100", "OSID-100", "OSID-100", "SF5A136", "ODI-100", "WebCam SCB-0350M" };
             string[] camList = ListOfAttachedCameras();
 
@@ -29,7 +38,7 @@ namespace CD1HW.Hardware
                     break;
                 }
             }*/
-            AppSettings appSettings = AppSettings.Instance;
+            //AppSettings appSettings = AppSettings.Instance;
             int camIdx = 0;
             Mat frame = new Mat();
             capture = new VideoCapture();
@@ -45,9 +54,9 @@ namespace CD1HW.Hardware
                             if (capture==null || !capture.IsOpened())
                             {
                                 Console.WriteLine("try open camera");
-                                camIdx = appSettings.camIdx;
+                                camIdx = _appSettings.CamIdx;
                                 Console.WriteLine(camIdx);
-                                capture.Open(camIdx, appSettings.cameraBackEnd);
+                                capture.Open(camIdx, _appSettings.CameraBackEnd);
                                 capture.FrameWidth = 1920;
                                 capture.FrameHeight = 1440;
                                 capture.Fps = 30;
@@ -65,12 +74,12 @@ namespace CD1HW.Hardware
                         {
                             //Console.WriteLine(frame.Size());
                             Mat src = new Mat();
-                            if (appSettings.camera_rotate != 0)
+                            if (_appSettings.camera_rotate != 0)
                             {
-                                Mat matrix = Cv2.GetRotationMatrix2D(new Point2f(frame.Width / 2, frame.Height / 2), appSettings.camera_rotate, 1.0);
+                                Mat matrix = Cv2.GetRotationMatrix2D(new Point2f(frame.Width / 2, frame.Height / 2), _appSettings.camera_rotate, 1.0);
                                 Cv2.WarpAffine(frame, src, matrix, new OpenCvSharp.Size(frame.Width, frame.Height));
                             }
-                            if (appSettings.camera_crop)
+                            if (_appSettings.camera_crop)
                             {
                                 float cropLeft = src.Width * 0.2f;
                                 float cropRight = src.Width * 0.2f;
@@ -86,8 +95,8 @@ namespace CD1HW.Hardware
                             byte[] imgBuf = memoryStream.ToArray();
                             
                             
-                            appSettings.imgBase64Str = Convert.ToBase64String(imgBuf);
-                            appSettings.cameraBitmap = bitmapImage;
+                            _appSettings.imgBase64Str = Convert.ToBase64String(imgBuf);
+                            _appSettings.cameraBitmap = bitmapImage;
                         }
                         catch (Exception e)
                         {

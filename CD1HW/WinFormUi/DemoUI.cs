@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using CD1HW.Hardware;
+using NAudio.Wave;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using System;
@@ -27,9 +28,27 @@ namespace CD1HW.WinFormUi
         private int BUTTON_IMAGE_WIDTH = 50;
         private int BUTTON_IMAGE_HEIGHT = 50;
 
+        private readonly OcrCamera _appSettings;
+
+        public DemoUI(OcrCamera appSettings)
+        {
+            InitializeComponent();
+            _appSettings = appSettings;
+            demoUI = this;
+            upadateCameraFrame();
+            SetImageOnButton(button_photo, Properties.Resources.scan_icon, BUTTON_IMAGE_WIDTH, BUTTON_IMAGE_HEIGHT);
+            SetImageOnButton(button_fingerprint, Properties.Resources.User_Interface_Fingerprint_Scan_icon, BUTTON_IMAGE_WIDTH, BUTTON_IMAGE_HEIGHT);
+            SetImageOnButton(button_record, Properties.Resources.mic_icon, BUTTON_IMAGE_WIDTH, BUTTON_IMAGE_HEIGHT);
+            SetImageOnButton(button_setting, Properties.Resources.gear_icon, button_setting.Width, button_setting.Height);
+
+            Console.WriteLine(appSettings.DemoUIOnStart);
+            
+        }
+
         private void upadateCameraFrame()
         {
             Thread cameraThread = new Thread(new ThreadStart(upadateCameraFrameTherad));
+            cameraThread.IsBackground = true;
             cameraThread.Start();
         }
         private void upadateCameraFrameTherad()
@@ -38,8 +57,8 @@ namespace CD1HW.WinFormUi
             {
                 try
                 {
-                    AppSettings appSettings = AppSettings.Instance;
-                    Bitmap cameraBitmap = appSettings.cameraBitmap;
+                    //AppSettings appSettings = AppSettings.Instance;
+                    Bitmap cameraBitmap = _appSettings.cameraBitmap;
                     if (cameraBitmap != null)
                     {
                         if (camera_image1.InvokeRequired)
@@ -52,18 +71,16 @@ namespace CD1HW.WinFormUi
                             //camera_image1.Image = bitmapImage;
                             camera_image1.Image = cameraBitmap;
                         }
-                        
- 
                     }
                     else
                     {
                         //init camera image
 
                     }
-                    if (appSettings.id_card_type != null)
+                    if (_appSettings.id_card_type != null)
                     {
                         string idCardType = "";
-                        switch (appSettings.id_card_type)
+                        switch (_appSettings.id_card_type)
                         {
                             case "jumin_card":
                                 idCardType = "주민등록증";
@@ -92,59 +109,66 @@ namespace CD1HW.WinFormUi
                             textBox_idcard_type.Text = idCardType;
                         }
                     }
-                    if (appSettings.name != null)
+                    if (_appSettings.name != null)
                     {
                         if (textBox_name.InvokeRequired)
                         {
-                            textBox_name.Invoke(new MethodInvoker(delegate { textBox_name.Text = appSettings.name; }));
+                            textBox_name.Invoke(new MethodInvoker(delegate { textBox_name.Text = _appSettings.name; }));
                         }
                         else
                         {
-                            textBox_name.Text = appSettings.name;
+                            textBox_name.Text = _appSettings.name;
                         }
                     }
-                    if (appSettings.regnum != null)
+                    if (_appSettings.regnum != null)
                     {
                         try
                         {
-                            string[] regnumArr = appSettings.regnum.Split('-');
-                            if (textBox_regnum.InvokeRequired)
+                            string[] regnumArr = _appSettings.regnum.Split('-');
+                            if (regnumArr.Length > 0)
                             {
-                                textBox_regnum.Invoke(new MethodInvoker(delegate { textBox_regnum.Text = regnumArr[0]; }));
+                                if (textBox_regnum.InvokeRequired)
+                                {
+                                    textBox_regnum.Invoke(new MethodInvoker(delegate { textBox_regnum.Text = regnumArr[0]; }));
+                                }
+                                else
+                                {
+                                    textBox_regnum.Text = regnumArr[0];
+                                }
+                            
                             }
-                            else
+                            if (regnumArr.Length > 1)
                             {
-                                textBox_regnum.Text = regnumArr[0];
-                            }
-                            if (textBox_regnum2.InvokeRequired)
-                            {
-                                textBox_regnum2.Invoke(new MethodInvoker(delegate { textBox_regnum.Text = regnumArr[1]; }));
-                            }
-                            else
-                            {
-                                textBox_regnum2.Text = regnumArr[1];
+                                if (textBox_regnum2.InvokeRequired)
+                                {
+                                    textBox_regnum2.Invoke(new MethodInvoker(delegate { textBox_regnum2.Text = regnumArr[1]; }));
+                                }
+                                else
+                                {
+                                    textBox_regnum2.Text = regnumArr[1];
+                                }
                             }
                         }
                         catch (Exception)
                         {
                         }
                     }
-                    if (appSettings.addr != null)
+                    if (_appSettings.addr != null)
                     {
                         if (richTextBox_addr.InvokeRequired)
                         {
-                            richTextBox_addr.Invoke(new MethodInvoker(delegate { textBox_name.Text = appSettings.addr; }));
+                            richTextBox_addr.Invoke(new MethodInvoker(delegate { textBox_name.Text = _appSettings.addr; }));
                         }
                         else
                         {
-                            richTextBox_addr.Text = appSettings.addr;
+                            richTextBox_addr.Text = _appSettings.addr;
                         }
                     }
-                    if (appSettings.issue_date != null)
+                    if (_appSettings.issue_date != null)
                     {
                         try
                         {
-                            string[] issueDateArr = appSettings.issue_date.Split('-');
+                            string[] issueDateArr = _appSettings.issue_date.Split('-');
                             if (textBox_issue_date_yyyy.InvokeRequired)
                             {
                                 textBox_issue_date_yyyy.Invoke(new MethodInvoker(delegate { textBox_issue_date_yyyy.Text = issueDateArr[0]; }));
@@ -175,29 +199,23 @@ namespace CD1HW.WinFormUi
                         {
                         }
                     }
+                    if(_appSettings.finger_img != null)
+                    {
+
+                    }
                     Thread.Sleep(15);
                     
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                 }
             }
-        }
-        public DemoUI()
-        {
-
-            InitializeComponent();
-            demoUI = this;
-            upadateCameraFrame();
-            SetImageOnButton(button_photo, Properties.Resources.scan_icon, BUTTON_IMAGE_WIDTH, BUTTON_IMAGE_HEIGHT);
-            SetImageOnButton(button_fingerprint, Properties.Resources.User_Interface_Fingerprint_Scan_icon, BUTTON_IMAGE_WIDTH, BUTTON_IMAGE_HEIGHT);
-            SetImageOnButton(button_record, Properties.Resources.mic_icon, BUTTON_IMAGE_WIDTH, BUTTON_IMAGE_HEIGHT);
-            SetImageOnButton(button_setting, Properties.Resources.gear_icon, button_setting.Width, button_setting.Height);
         }
 
         private void button_photo_Click(object sender, EventArgs e)
         {
-
+            _appSettings.mamanual_flag = 1;
         }
 
         private void button_fingerprint_Click(object sender, EventArgs e)

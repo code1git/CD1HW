@@ -68,8 +68,8 @@
             // label_regnum
             // 
             this.label_regnum.AutoSize = true;
-            this.label_regnum.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_regnum.Location = new System.Drawing.Point(363, 648);
+            this.label_regnum.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_regnum.Location = new System.Drawing.Point(363, 720);
             this.label_regnum.Name = "label_regnum";
             this.label_regnum.Size = new System.Drawing.Size(88, 25);
             this.label_regnum.TabIndex = 2;
@@ -78,8 +78,8 @@
             // label_issue_date
             // 
             this.label_issue_date.AutoSize = true;
-            this.label_issue_date.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_issue_date.Location = new System.Drawing.Point(70, 786);
+            this.label_issue_date.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_issue_date.Location = new System.Drawing.Point(67, 870);
             this.label_issue_date.Name = "label_issue_date";
             this.label_issue_date.Size = new System.Drawing.Size(69, 25);
             this.label_issue_date.TabIndex = 2;
@@ -88,8 +88,8 @@
             // label_name
             // 
             this.label_name.AutoSize = true;
-            this.label_name.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_name.Location = new System.Drawing.Point(70, 648);
+            this.label_name.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_name.Location = new System.Drawing.Point(70, 720);
             this.label_name.Name = "label_name";
             this.label_name.Size = new System.Drawing.Size(57, 25);
             this.label_name.TabIndex = 2;
@@ -97,8 +97,9 @@
             // 
             // textBox_regnum
             // 
-            this.textBox_regnum.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_regnum.Location = new System.Drawing.Point(459, 645);
+            this.textBox_regnum.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_regnum.Location = new System.Drawing.Point(459, 716);
+            this.textBox_regnum.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_regnum.Name = "textBox_regnum";
             this.textBox_regnum.Size = new System.Drawing.Size(156, 33);
             this.textBox_regnum.TabIndex = 3;
@@ -106,8 +107,9 @@
             // 
             // textBox_issue_date_yyyy
             // 
-            this.textBox_issue_date_yyyy.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_issue_date_yyyy.Location = new System.Drawing.Point(180, 783);
+            this.textBox_issue_date_yyyy.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_issue_date_yyyy.Location = new System.Drawing.Point(177, 867);
+            this.textBox_issue_date_yyyy.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_issue_date_yyyy.Name = "textBox_issue_date_yyyy";
             this.textBox_issue_date_yyyy.Size = new System.Drawing.Size(95, 33);
             this.textBox_issue_date_yyyy.TabIndex = 3;
@@ -115,8 +117,9 @@
             // 
             // textBox_name
             // 
-            this.textBox_name.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_name.Location = new System.Drawing.Point(180, 643);
+            this.textBox_name.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_name.Location = new System.Drawing.Point(180, 714);
+            this.textBox_name.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_name.Name = "textBox_name";
             this.textBox_name.Size = new System.Drawing.Size(167, 33);
             this.textBox_name.TabIndex = 3;
@@ -124,8 +127,9 @@
             // 
             // textBox_qr
             // 
-            this.textBox_qr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_qr.Location = new System.Drawing.Point(180, 842);
+            this.textBox_qr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_qr.Location = new System.Drawing.Point(180, 910);
+            this.textBox_qr.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_qr.Name = "textBox_qr";
             this.textBox_qr.Size = new System.Drawing.Size(503, 33);
             this.textBox_qr.TabIndex = 3;
@@ -133,8 +137,8 @@
             // label_qr
             // 
             this.label_qr.AutoSize = true;
-            this.label_qr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_qr.Location = new System.Drawing.Point(70, 845);
+            this.label_qr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_qr.Location = new System.Drawing.Point(70, 914);
             this.label_qr.Name = "label_qr";
             this.label_qr.Size = new System.Drawing.Size(69, 25);
             this.label_qr.TabIndex = 2;
@@ -143,8 +147,8 @@
             // label_addr
             // 
             this.label_addr.AutoSize = true;
-            this.label_addr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_addr.Location = new System.Drawing.Point(70, 693);
+            this.label_addr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_addr.Location = new System.Drawing.Point(70, 761);
             this.label_addr.Name = "label_addr";
             this.label_addr.Size = new System.Drawing.Size(50, 25);
             this.label_addr.TabIndex = 2;
@@ -154,14 +158,14 @@
             // 
             this.button_fingerprint.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(236)))), ((int)(((byte)(255)))));
             this.button_fingerprint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button_fingerprint.Cursor = System.Windows.Forms.Cursors.Default;
-            this.button_fingerprint.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.button_fingerprint.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button_fingerprint.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button_fingerprint.Location = new System.Drawing.Point(186, 20);
+            this.button_fingerprint.Location = new System.Drawing.Point(180, 13);
+            this.button_fingerprint.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_fingerprint.Name = "button_fingerprint";
-            this.button_fingerprint.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
+            this.button_fingerprint.Padding = new System.Windows.Forms.Padding(0, 12, 0, 12);
             this.button_fingerprint.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.button_fingerprint.Size = new System.Drawing.Size(120, 120);
+            this.button_fingerprint.Size = new System.Drawing.Size(120, 133);
             this.button_fingerprint.TabIndex = 1;
             this.button_fingerprint.Text = "지문 스캔";
             this.button_fingerprint.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -172,14 +176,14 @@
             // 
             this.button_photo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(236)))), ((int)(((byte)(255)))));
             this.button_photo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button_photo.Cursor = System.Windows.Forms.Cursors.Default;
-            this.button_photo.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.button_photo.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button_photo.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button_photo.Location = new System.Drawing.Point(20, 20);
+            this.button_photo.Location = new System.Drawing.Point(12, 13);
+            this.button_photo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_photo.Name = "button_photo";
-            this.button_photo.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
+            this.button_photo.Padding = new System.Windows.Forms.Padding(0, 12, 0, 12);
             this.button_photo.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.button_photo.Size = new System.Drawing.Size(120, 120);
+            this.button_photo.Size = new System.Drawing.Size(120, 133);
             this.button_photo.TabIndex = 1;
             this.button_photo.Text = "신분증 스캔";
             this.button_photo.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -190,14 +194,14 @@
             // 
             this.button_record.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(236)))), ((int)(((byte)(255)))));
             this.button_record.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button_record.Cursor = System.Windows.Forms.Cursors.Default;
-            this.button_record.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.button_record.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button_record.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button_record.Location = new System.Drawing.Point(368, 20);
+            this.button_record.Location = new System.Drawing.Point(348, 13);
+            this.button_record.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_record.Name = "button_record";
-            this.button_record.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
+            this.button_record.Padding = new System.Windows.Forms.Padding(0, 12, 0, 12);
             this.button_record.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.button_record.Size = new System.Drawing.Size(120, 120);
+            this.button_record.Size = new System.Drawing.Size(120, 133);
             this.button_record.TabIndex = 1;
             this.button_record.Text = "녹음";
             this.button_record.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -207,11 +211,12 @@
             // button_reset_form
             // 
             this.button_reset_form.BackColor = System.Drawing.Color.Navy;
-            this.button_reset_form.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.button_reset_form.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button_reset_form.ForeColor = System.Drawing.Color.White;
-            this.button_reset_form.Location = new System.Drawing.Point(626, 103);
+            this.button_reset_form.Location = new System.Drawing.Point(621, 100);
+            this.button_reset_form.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_reset_form.Name = "button_reset_form";
-            this.button_reset_form.Size = new System.Drawing.Size(114, 37);
+            this.button_reset_form.Size = new System.Drawing.Size(114, 46);
             this.button_reset_form.TabIndex = 5;
             this.button_reset_form.Text = "초기화";
             this.button_reset_form.UseVisualStyleBackColor = false;
@@ -219,8 +224,9 @@
             // 
             // textBox_regnum2
             // 
-            this.textBox_regnum2.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_regnum2.Location = new System.Drawing.Point(647, 645);
+            this.textBox_regnum2.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_regnum2.Location = new System.Drawing.Point(647, 716);
+            this.textBox_regnum2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_regnum2.Name = "textBox_regnum2";
             this.textBox_regnum2.Size = new System.Drawing.Size(154, 33);
             this.textBox_regnum2.TabIndex = 3;
@@ -228,8 +234,9 @@
             // 
             // textBox_issue_date_MM
             // 
-            this.textBox_issue_date_MM.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_issue_date_MM.Location = new System.Drawing.Point(348, 783);
+            this.textBox_issue_date_MM.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_issue_date_MM.Location = new System.Drawing.Point(345, 867);
+            this.textBox_issue_date_MM.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_issue_date_MM.Name = "textBox_issue_date_MM";
             this.textBox_issue_date_MM.Size = new System.Drawing.Size(81, 33);
             this.textBox_issue_date_MM.TabIndex = 3;
@@ -237,8 +244,9 @@
             // 
             // textBox_issue_date_dd
             // 
-            this.textBox_issue_date_dd.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_issue_date_dd.Location = new System.Drawing.Point(522, 781);
+            this.textBox_issue_date_dd.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_issue_date_dd.Location = new System.Drawing.Point(519, 864);
+            this.textBox_issue_date_dd.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_issue_date_dd.Name = "textBox_issue_date_dd";
             this.textBox_issue_date_dd.Size = new System.Drawing.Size(74, 33);
             this.textBox_issue_date_dd.TabIndex = 3;
@@ -246,18 +254,19 @@
             // 
             // richTextBox_addr
             // 
-            this.richTextBox_addr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold);
-            this.richTextBox_addr.Location = new System.Drawing.Point(180, 690);
+            this.richTextBox_addr.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.richTextBox_addr.Location = new System.Drawing.Point(180, 757);
+            this.richTextBox_addr.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.richTextBox_addr.Name = "richTextBox_addr";
-            this.richTextBox_addr.Size = new System.Drawing.Size(533, 80);
+            this.richTextBox_addr.Size = new System.Drawing.Size(533, 99);
             this.richTextBox_addr.TabIndex = 6;
             this.richTextBox_addr.Text = "";
             // 
             // label_type
             // 
             this.label_type.AutoSize = true;
-            this.label_type.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_type.Location = new System.Drawing.Point(71, 600);
+            this.label_type.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_type.Location = new System.Drawing.Point(71, 674);
             this.label_type.Name = "label_type";
             this.label_type.Size = new System.Drawing.Size(50, 25);
             this.label_type.TabIndex = 2;
@@ -265,8 +274,9 @@
             // 
             // textBox_idcard_type
             // 
-            this.textBox_idcard_type.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBox_idcard_type.Location = new System.Drawing.Point(180, 597);
+            this.textBox_idcard_type.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBox_idcard_type.Location = new System.Drawing.Point(180, 670);
+            this.textBox_idcard_type.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_idcard_type.Name = "textBox_idcard_type";
             this.textBox_idcard_type.Size = new System.Drawing.Size(167, 33);
             this.textBox_idcard_type.TabIndex = 3;
@@ -275,8 +285,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label1.Location = new System.Drawing.Point(621, 648);
+            this.label1.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(621, 720);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(20, 25);
             this.label1.TabIndex = 2;
@@ -285,8 +295,8 @@
             // label_yyyy
             // 
             this.label_yyyy.AutoSize = true;
-            this.label_yyyy.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_yyyy.Location = new System.Drawing.Point(290, 786);
+            this.label_yyyy.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_yyyy.Location = new System.Drawing.Point(287, 870);
             this.label_yyyy.Name = "label_yyyy";
             this.label_yyyy.Size = new System.Drawing.Size(31, 25);
             this.label_yyyy.TabIndex = 2;
@@ -295,8 +305,8 @@
             // label_MM
             // 
             this.label_MM.AutoSize = true;
-            this.label_MM.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_MM.Location = new System.Drawing.Point(454, 786);
+            this.label_MM.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_MM.Location = new System.Drawing.Point(451, 870);
             this.label_MM.Name = "label_MM";
             this.label_MM.Size = new System.Drawing.Size(31, 25);
             this.label_MM.TabIndex = 2;
@@ -305,8 +315,8 @@
             // label_dd
             // 
             this.label_dd.AutoSize = true;
-            this.label_dd.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label_dd.Location = new System.Drawing.Point(621, 786);
+            this.label_dd.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_dd.Location = new System.Drawing.Point(618, 870);
             this.label_dd.Name = "label_dd";
             this.label_dd.Size = new System.Drawing.Size(31, 25);
             this.label_dd.TabIndex = 2;
@@ -315,11 +325,12 @@
             // button_shutdown
             // 
             this.button_shutdown.BackColor = System.Drawing.Color.LightSlateGray;
-            this.button_shutdown.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.button_shutdown.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button_shutdown.ForeColor = System.Drawing.Color.White;
-            this.button_shutdown.Location = new System.Drawing.Point(410, 906);
+            this.button_shutdown.Location = new System.Drawing.Point(368, 963);
+            this.button_shutdown.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_shutdown.Name = "button_shutdown";
-            this.button_shutdown.Size = new System.Drawing.Size(114, 37);
+            this.button_shutdown.Size = new System.Drawing.Size(114, 46);
             this.button_shutdown.TabIndex = 5;
             this.button_shutdown.Text = "종료";
             this.button_shutdown.UseVisualStyleBackColor = false;
@@ -328,8 +339,8 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label2.Location = new System.Drawing.Point(704, 176);
+            this.label2.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(709, 194);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(114, 25);
             this.label2.TabIndex = 2;
@@ -339,9 +350,10 @@
             // pictureBox_finger
             // 
             this.pictureBox_finger.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox_finger.Location = new System.Drawing.Point(709, 213);
+            this.pictureBox_finger.Location = new System.Drawing.Point(709, 223);
+            this.pictureBox_finger.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox_finger.Name = "pictureBox_finger";
-            this.pictureBox_finger.Size = new System.Drawing.Size(203, 288);
+            this.pictureBox_finger.Size = new System.Drawing.Size(203, 239);
             this.pictureBox_finger.TabIndex = 4;
             this.pictureBox_finger.TabStop = false;
             // 
@@ -349,9 +361,10 @@
             // 
             this.camera_image1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("camera_image1.BackgroundImage")));
             this.camera_image1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.camera_image1.Location = new System.Drawing.Point(16, 176);
+            this.camera_image1.Location = new System.Drawing.Point(11, 165);
+            this.camera_image1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.camera_image1.Name = "camera_image1";
-            this.camera_image1.Size = new System.Drawing.Size(672, 396);
+            this.camera_image1.Size = new System.Drawing.Size(672, 495);
             this.camera_image1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.camera_image1.TabIndex = 0;
             this.camera_image1.TabStop = false;
@@ -360,16 +373,17 @@
             // 
             this.button_setting.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.button_setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_setting.Location = new System.Drawing.Point(848, 71);
+            this.button_setting.Location = new System.Drawing.Point(848, 85);
+            this.button_setting.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button_setting.Name = "button_setting";
-            this.button_setting.Size = new System.Drawing.Size(64, 69);
+            this.button_setting.Size = new System.Drawing.Size(64, 61);
             this.button_setting.TabIndex = 7;
             this.button_setting.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label3.Location = new System.Drawing.Point(10, 159);
+            this.label3.Location = new System.Drawing.Point(10, 154);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(908, 2);
             this.label3.TabIndex = 8;
@@ -377,7 +391,7 @@
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label4.Location = new System.Drawing.Point(10, 584);
+            this.label4.Location = new System.Drawing.Point(11, 664);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(908, 2);
             this.label4.TabIndex = 8;
@@ -385,7 +399,7 @@
             // label5
             // 
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label5.Location = new System.Drawing.Point(10, 889);
+            this.label5.Location = new System.Drawing.Point(10, 947);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(908, 2);
             this.label5.TabIndex = 8;
@@ -393,17 +407,18 @@
             // label6
             // 
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(10, 828);
+            this.label6.Location = new System.Drawing.Point(4, 904);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(908, 2);
             this.label6.TabIndex = 8;
             // 
             // DemoUI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(935, 961);
+            this.ClientSize = new System.Drawing.Size(944, 1061);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -436,6 +451,7 @@
             this.Controls.Add(this.button_fingerprint);
             this.Controls.Add(this.button_photo);
             this.Controls.Add(this.camera_image1);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DemoUI";
             this.Text = "DemoUI";
             this.Load += new System.EventHandler(this.DemoUI_Load);
