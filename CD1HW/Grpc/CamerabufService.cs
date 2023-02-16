@@ -16,8 +16,8 @@ namespace CD1HW.Grpc
         {
             CamerabufSendFrame frame = new CamerabufSendFrame();
             frame.Base64Img = _ocrCamera.imgBase64Str;
-            frame.ManualFlag = _ocrCamera.mamanual_flag;
-            _ocrCamera.mamanual_flag = 0;
+            frame.ManualFlag = _ocrCamera.manual_flag;
+            _ocrCamera.manual_flag = 0;
             return Task.FromResult(frame);
         }
     }

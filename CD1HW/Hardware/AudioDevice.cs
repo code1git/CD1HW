@@ -9,10 +9,11 @@ using NAudio.Wave;
 using NAudio.Midi;
 using Microsoft.VisualBasic.Logging;
 using WebSocketsSample.Controllers;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace CD1HW.Hardware
 {
-    class AudioDevice
+    public class AudioDevice
     {
         private readonly ILogger<AudioDevice> _logger;
 
@@ -22,9 +23,10 @@ namespace CD1HW.Hardware
         }
 
         private int inputDeviceIdx = -1;
-        private MMDevice outputDevice;
+        public MMDevice outputDevice;
         private WaveInEvent waveSource;
         private WaveFileWriter waveFile;
+        private WasapiOut wasapiOut;
 
         public void PlaySound(string waveFilepath)
         {
@@ -32,12 +34,23 @@ namespace CD1HW.Hardware
                 SelectOutputDevice();
             AudioFileReader audioFileReader = new AudioFileReader(waveFilepath);
 
-            WasapiOut wasapiOut = new WasapiOut(outputDevice, AudioClientShareMode.Shared, false, 0);
+            wasapiOut = new WasapiOut(outputDevice, AudioClientShareMode.Shared, false, 0);
             wasapiOut.Init(audioFileReader);
             wasapiOut.Play();
-            while (wasapiOut.PlaybackState == PlaybackState.Playing)
+            /*while (wasapiOut.PlaybackState == PlaybackState.Playing)
             {
                 Thread.Sleep(500);
+            }*/
+        }
+
+        public void StopSound()
+        {
+            try
+            {
+                wasapiOut.Stop();
+            }
+            catch (Exception)
+            {
             }
         }
 

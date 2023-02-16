@@ -12,30 +12,25 @@ namespace CD1HW
     {
         private readonly AppSettings? _options;
         private readonly ILogger<NecDemoCsv> _logger;
-        private Dictionary<string, string> _necDemoAddr;
+        private List<Person> _necDemoAddr;
         public NecDemoCsv(ILogger<NecDemoCsv> logger, IOptions<AppSettings> options)
         {
-            Console.WriteLine("ccc");
             _logger = logger;
             _options = options.Value;
-            _necDemoAddr = new Dictionary<string, string>();
+            _necDemoAddr = new List<Person>();
         }
 
         public void ReadCsv()
         {
             string NecDemoFilePath = _options.NecDemoFilePath;
-            _logger.LogInformation(_options.NecDemoFilePath);
+            _logger.LogInformation("read csv 4 nec start.... : "+ _options.NecDemoFilePath);
 
             try
             {
                 using(StreamReader sr = new StreamReader(NecDemoFilePath))
                 using(CsvReader csv = new CsvReader(sr, CultureInfo.InvariantCulture))
                 {
-                    IEnumerable<Person> recodes = csv.GetRecords<Person>();
-                    foreach(Person person in recodes)
-                    {
-                        //Console.WriteLine(person.Name + " " + person.Address);
-                    }
+                    _necDemoAddr = csv.GetRecords<Person>().ToList();
                 }
             }
             catch (Exception e)
@@ -46,6 +41,31 @@ namespace CD1HW
             {
                
             }
+        }
+
+        public string GetAddr(string name)
+        {
+            foreach (Person person in _necDemoAddr)
+            {
+                if (person.Name.Equals(name))
+                {
+                    return person.Address;
+                }
+            }
+            return "";
+        }
+
+        public List<Person> GetAddr(string name, string regnum, string birth)
+        {
+            List<Person> people = new List<Person>();
+            foreach (Person person in _necDemoAddr)
+            {
+                if (person.Name.Equals(name.Replace("-", "").Replace(".", "").Replace(" ", "")) && (person.Regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(regnum)|| person.Regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(birth)))
+                {
+                    people.Add(person);
+                }
+            }
+            return people;
         }
 
         public class Person

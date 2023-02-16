@@ -16,12 +16,12 @@ namespace WebSocketsSample.Controllers;
 public class WebSocketController : ControllerBase
 {
     private readonly ILogger<WebSocketController> _logger;
-    private readonly OcrCamera _appSettings;
+    private readonly OcrCamera _ocrCamera;
 
-    public WebSocketController(ILogger<WebSocketController> logger, OcrCamera appSettings)
+    public WebSocketController(ILogger<WebSocketController> logger, OcrCamera ocrCamera)
     {
         _logger = logger;
-        _appSettings = appSettings;
+        _ocrCamera = ocrCamera;
     }
 
     [HttpGet("/ws")]
@@ -29,7 +29,7 @@ public class WebSocketController : ControllerBase
     {
         if (HttpContext.WebSockets.IsWebSocketRequest)
         {
-            _logger.LogInformation("ws connected!");
+            _logger.LogInformation("web socket connected!");
             try
             {
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
@@ -38,12 +38,12 @@ public class WebSocketController : ControllerBase
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError("error in web socket! : " + e.Message);
             }
         }
         else
         {
-            _logger.LogInformation("ws fail (not an ws request)");
+            _logger.LogInformation("web socket fail (not an web socket request)");
             HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         }
     }
@@ -59,18 +59,20 @@ public class WebSocketController : ControllerBase
         {
             //byte[] msgBuf = Encoding.UTF8.GetBytes(AppSettings.imgBase64Str);
             WsMsg wsMsg = new WsMsg();
-            //AppSettings appSettings = AppSettings.Instance;
-            lock (_appSettings)
-            {
-                wsMsg.imgBase64Str = _appSettings.imgBase64Str;
-                wsMsg.name = _appSettings.name;
-                wsMsg.regnum = _appSettings.regnum;
-                wsMsg.addr = _appSettings.addr;
-                wsMsg.birth = _appSettings.birth;
-                wsMsg.name_img = _appSettings.name_img;
-                wsMsg.regnum_img = _appSettings.regnum_img;
-                wsMsg.face_img = _appSettings.face_img;   
-            }
+        
+            wsMsg.imgBase64Str = _ocrCamera.imgBase64Str;
+            wsMsg.name = _ocrCamera.name;
+            wsMsg.regnum = _ocrCamera.regnum;
+            wsMsg.addr = _ocrCamera.addr;
+            wsMsg.birth = _ocrCamera.birth;
+            wsMsg.sex = _ocrCamera.sex;
+            wsMsg.name_img = _ocrCamera.name_img;
+            wsMsg.regnum_img = _ocrCamera.regnum_img;
+            wsMsg.face_img = _ocrCamera.face_img;
+            wsMsg.masking_img = _ocrCamera.masking_img;
+            wsMsg.sign_img= _ocrCamera.sign_img;
+            wsMsg.finger_img = _ocrCamera.finger_img;
+            
             byte[] msgBuf = JsonSerializer.SerializeToUtf8Bytes<WsMsg>(wsMsg);
 
 
@@ -100,8 +102,13 @@ public class WsMsg
     public string addr { get; set; }
     public string birth { get; set; }
     public string regnum { get; set; }
+    public string sex { get; set; }
     public string name_img { get; set; }
     public string regnum_img { get; set; }
     public string face_img { get; set; }
     public string birth_img { get; set; }
+    public string masking_img { get; set; }
+    public string sign_img { get; set; }
+    public string finger_img { get; set; }
+
 }

@@ -17,6 +17,7 @@
         public string driver_num { get; set; }
         public string issue_date { get; set; }
         public string addr { get; set; }
+        public string sex { get; set; }
         // cradit card
         public string cradit_card_num { get; set; }
         public string expiry_date { get; set; }
@@ -37,6 +38,7 @@
         public string regnum_img { get; set; }
         public string face_img { get; set; }
         public string birth_img { get; set; }
+        public string masking_img { get; set; }
 
     }
 }

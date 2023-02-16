@@ -1,12 +1,14 @@
 ﻿using CD1HW.Grpc;
 using CD1HW.Hardware;
 using CD1HW.WinFormUi;
+using Grpc.AspNetCore.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WacomSTUTest.Hardware;
 
 namespace CD1HW
 {
@@ -29,17 +31,28 @@ namespace CD1HW
             services.AddGrpc();
             services.AddSingleton<OcrCamera>();
             services.AddSingleton<Cv2Camera>();
+            services.AddSingleton<AudioDevice>();
             services.AddScoped<NotifyIconForm>();
             services.AddSingleton<NecDemoCsv>();
+            services.AddSingleton<IzzixFingerprint>();
+            services.AddSingleton<WacomSTU>();
+            services.AddCors(opctions =>
+            {
+                opctions.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin().AllowAnyHeader();
+                });
+            });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
 
             //app.UseHttpsRedirection();
 
@@ -51,6 +64,7 @@ namespace CD1HW
             
             
             app.UseWebSockets(webSocketOptions);
+            app.UseCors();
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>
@@ -60,6 +74,8 @@ namespace CD1HW
                 endpoints.MapControllers();
             });
 
+            var _path = Directory.GetCurrentDirectory();
+            loggerFactory.AddFile($"{_path}\\logs\\log.txt");
         }
     }
 }

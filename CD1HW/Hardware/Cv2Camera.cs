@@ -11,11 +11,11 @@ namespace CD1HW.Hardware
     public sealed class Cv2Camera
     {
         private readonly ILogger<Cv2Camera> _logger;
-        private readonly OcrCamera _appSettings;
-        public Cv2Camera(ILogger<Cv2Camera> logger, OcrCamera appSettings)
+        private readonly OcrCamera _ocrCamera;
+        public Cv2Camera(ILogger<Cv2Camera> logger, OcrCamera ocrCamera)
         {
             _logger = logger;
-            _appSettings = appSettings;
+            _ocrCamera = ocrCamera;
         }
         //private static readonly Lazy<Cv2Camera> _insteance = new Lazy<Cv2Camera>(() => new Cv2Camera());
         //public static Cv2Camera Instance { get { return _insteance.Value; } }
@@ -38,10 +38,12 @@ namespace CD1HW.Hardware
                     break;
                 }
             }*/
-            //AppSettings appSettings = AppSettings.Instance;
             int camIdx = 0;
             Mat frame = new Mat();
             capture = new VideoCapture();
+
+            string[] supportCamList = { "OSID-SQ100", "OSID-100", "OSID-100", "SF5A136", "ODI-100", "WebCam SCB-0350M" };
+
             while (true)
             {
                 try
@@ -53,10 +55,9 @@ namespace CD1HW.Hardware
                         {
                             if (capture==null || !capture.IsOpened())
                             {
-                                Console.WriteLine("try open camera");
-                                camIdx = _appSettings.CamIdx;
-                                Console.WriteLine(camIdx);
-                                capture.Open(camIdx, _appSettings.CameraBackEnd);
+                                camIdx = _ocrCamera.CamIdx;
+                                _logger.LogInformation("try open camera : " + _ocrCamera.CameraBackEnd + " " + camIdx );
+                                capture.Open(camIdx, _ocrCamera.CameraBackEnd);
                                 capture.FrameWidth = 1920;
                                 capture.FrameHeight = 1440;
                                 capture.Fps = 30;
@@ -66,7 +67,7 @@ namespace CD1HW.Hardware
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.ToString());
+                        _logger.LogError("camera frame read fail : " + e.Message);
                     }
                     if (frame.Size().Width != 0 && frame.Size().Height != 0)
                     {
@@ -74,19 +75,35 @@ namespace CD1HW.Hardware
                         {
                             //Console.WriteLine(frame.Size());
                             Mat src = new Mat();
-                            if (_appSettings.camera_rotate != 0)
+                            if (_ocrCamera.camera_rotate != 0)
                             {
-                                Mat matrix = Cv2.GetRotationMatrix2D(new Point2f(frame.Width / 2, frame.Height / 2), _appSettings.camera_rotate, 1.0);
+                                Mat matrix = Cv2.GetRotationMatrix2D(new Point2f(frame.Width / 2, frame.Height / 2), _ocrCamera.camera_rotate, 1.0);
                                 Cv2.WarpAffine(frame, src, matrix, new OpenCvSharp.Size(frame.Width, frame.Height));
                             }
-                            if (_appSettings.camera_crop)
+                            if (_ocrCamera.camera_crop)
                             {
-                                float cropLeft = src.Width * 0.2f;
-                                float cropRight = src.Width * 0.2f;
-                                float cropTop = src.Height * 0.1f;
-                                float cropBotom = src.Height * 0.1f;
-                                Rect cropRectangle = new Rect((int) cropLeft, (int) cropTop, (int)(src.Width - cropLeft - cropRight), (int) (src.Height - cropTop - cropBotom));
-                                src = src.SubMat(cropRectangle);
+                                //float cropLeft = src.Width * 0.2f;
+                                //float cropRight = src.Width * 0.2f;
+                                //float cropTop = src.Height * 0.1f;
+                                //float cropBotom = src.Height * 0.1f;
+                                /*if(src.Width > 1900 && src.Height > 1050)
+                                {
+                                    float cropLeft = 300f;
+                                    float cropTop = 80f;
+                                    float cropRight = 1600f;
+                                    float cropBotom = 1020f;
+                                    Rect cropRectangle = new Rect((int) cropLeft, (int) cropTop, (int)(cropRight-cropLeft), (int) (cropBotom-cropTop));
+                                    src = src.SubMat(cropRectangle);
+                                }*/
+                                if (src.Width > 1900 && src.Height > 1050)
+                                {
+                                    float cropLeft = 150f;
+                                    float cropTop = 80f;
+                                    float cropRight = 1750f;
+                                    float cropBotom = 1020f;
+                                    Rect cropRectangle = new Rect((int)cropLeft, (int)cropTop, (int)(cropRight - cropLeft), (int)(cropBotom - cropTop));
+                                    src = src.SubMat(cropRectangle);
+                                }
                             }
                             Bitmap bitmapImage = BitmapConverter.ToBitmap(src);
 
@@ -95,19 +112,19 @@ namespace CD1HW.Hardware
                             byte[] imgBuf = memoryStream.ToArray();
                             
                             
-                            _appSettings.imgBase64Str = Convert.ToBase64String(imgBuf);
-                            _appSettings.cameraBitmap = bitmapImage;
+                            _ocrCamera.imgBase64Str = Convert.ToBase64String(imgBuf);
+                            _ocrCamera.cameraBitmap = bitmapImage;
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e.ToString());
+                            _logger.LogError("decode camera frame fail : " + e.Message);
                         }
                     }
 
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
+                    _logger.LogError("camera error!! : " + e.Message);
                 }
             }
         }
@@ -122,16 +139,16 @@ namespace CD1HW.Hardware
         {
             lock (capture)
             {
-                Console.WriteLine("camera closing");
                 if(capture.IsEnabledDispose)
                 {
+                    _logger.LogInformation("try change camera...\ntry closing camera...");
                     capture.Dispose();
                     capture = new VideoCapture();
-                    Console.WriteLine("camera closed");
+                    _logger.LogInformation("camera closed");
                 }
                 else
                 {
-                    Console.WriteLine("camera close fail");
+                    _logger.LogError("camera close fail");
                 }
             }
         }
@@ -141,10 +158,6 @@ namespace CD1HW.Hardware
             return capture.GetBackendName();
         }
 
-/*        public byte[] GetImgBuf()
-        {
-            return imgBuf;
-        }*/
 
         /*public int GetCameraIndexForPartName(string partName)
         {

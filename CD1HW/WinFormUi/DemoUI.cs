@@ -215,7 +215,7 @@ namespace CD1HW.WinFormUi
 
         private void button_photo_Click(object sender, EventArgs e)
         {
-            _appSettings.mamanual_flag = 1;
+            _appSettings.manual_flag = 1;
         }
 
         private void button_fingerprint_Click(object sender, EventArgs e)

@@ -9,6 +9,7 @@ using System.Threading;
 using IzzixWarp;
 using CD1HW.Controllers;
 using Serilog;
+using SharpDX;
 
 namespace CD1HW.Hardware
 {
@@ -36,104 +37,108 @@ namespace CD1HW.Hardware
             byte[] imgBuffer = null;
             //lock (_insteance)
             //{
-                if (IZZIX.IsAvailableDevice(0) != 1)
-                {
-                    //_logger.LogCritical("Fingerprint scanner is not available");
-                    return null;
-                }
+            if (IZZIX.IsAvailableDevice(0) != 1)
+            {
+                //_logger.LogCritical("Fingerprint scanner is not available");
+                return null;
+            }
 
+            if (isRunning)
+            {
+                isRunning = false;
+                Thread.Sleep(100);
+            }
+            isRunning = true;
+
+            // libray 사용을 위한 포인터/버퍼 선언
+            IntPtr pRawImageData = IntPtr.Zero;
+            IntPtr pFeature = IntPtr.Zero;
+            IntPtr pImgBuffer = IntPtr.Zero;
+            try
+            {
+                // scan fingerprint
+                pRawImageData = Marshal.AllocHGlobal(IMAGE_SIZE_MAX);
+                pFeature = Marshal.AllocHGlobal(FEATURE_SIZE_ISO_MAX);
+
+                byte[] rawImageData = new byte[IMAGE_SIZE_MAX];
+                byte[] feature = new byte[FEATURE_SIZE_ISO_MAX];
+
+                // 터치상태에서 스캔이 될때 (result == 1)이 될 때까지 반복적으로 스캔
+                int result = 0;
+            // 디바이스 정보 받기 (이미지 변환에 필요)
+                int nProduct, nSensor, width, height;
+                int* pnProduct = &nProduct;
+                int* pnSensor = &nSensor;
+                int* pWidth = &width;
+                int* pHeight = &height;
+                IZZIX.GetDevInfos(0, pnProduct, pnSensor);
+                IZZIX.GetImageSize(nSensor, pWidth, pHeight);
+
+                string sensorName = "";
+                sensorName = IZZIX.GetSensorString(nSensor);
+                Log.Debug("debug! imgae size : {0} * {1}, sensor : {2}", width, height, sensorName);
+                Console.WriteLine("debug! imgae size : {0} * {1}, sensor : {2}", width, height, sensorName);
+
+                while (result == 0 && isRunning)
+                {
+                    Thread.Sleep(1000);
+                    //result = IZZIX.GetFinger(0, (byte*)pRawImageData, (byte*)pFeature);
+                    float fakeScore;
+                    float* pFakeScore = &fakeScore;
+                    result = IZZIX.GetFPImage(0, (byte*)pRawImageData, pWidth, pHeight, pFakeScore);
+                }
                 if (isRunning)
                 {
-                    isRunning = false;
-                    Thread.Sleep(300);
-                }
-                isRunning = true;
+                    // 이미지 포인터 -> Byte array
+                    for (int i = 0; i < rawImageData.Length; i++)
+                    {
+                        rawImageData[i] = Marshal.ReadByte(pRawImageData, i);
+                    }
 
-                // libray 사용을 위한 포인터/버퍼 선언
-                IntPtr pRawImageData = IntPtr.Zero;
-                IntPtr pFeature = IntPtr.Zero;
-                IntPtr pImgBuffer = IntPtr.Zero;
+                    // convert raw data to bitmap
+                    // bitmap file header size : sizeof(BITMAPINFO)+(sizeof(RGBQUAD)*color) = 16+4*256
+                    int bitmapInfoSize = 1040;
+                    imgBuffer = new byte[width * height + bitmapInfoSize];
+                    pImgBuffer = Marshal.AllocHGlobal(IMAGE_SIZE_MAX + bitmapInfoSize);
+
+                    IZZIX.ConvertImage((byte*)pRawImageData, (byte*)pImgBuffer, width, height);
+                    for (int i = 0; i < imgBuffer.Length; i++)
+                    {
+                        imgBuffer[i] = Marshal.ReadByte(pImgBuffer, i);
+                    }
+
+                    // test code : save bitmap
+                    /*string path = @".\save\tmp1.bmp";
+                    FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+                    fs.Write(imgBuffer, 0, width*height);
+                    fs.Close();*/
+                }
+            }
+            catch (ThreadInterruptedException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.StackTrace);
+                Console.WriteLine(e.Message);
+
+            }
+            finally
+            {
                 try
                 {
-                    // scan fingerprint
-                    pRawImageData = Marshal.AllocHGlobal(IMAGE_SIZE_MAX);
-                    pFeature = Marshal.AllocHGlobal(FEATURE_SIZE_ISO_MAX);
-
-                    byte[] rawImageData = new byte[IMAGE_SIZE_MAX];
-                    byte[] feature = new byte[FEATURE_SIZE_ISO_MAX];
-
-                    // 터치상태에서 스캔이 될때 (result == 1)이 될 때까지 반복적으로 스캔
-                    int result = 0;
-                    while (result != 1 && isRunning)
-                    {
-                        Thread.Sleep(500);
-                        result = IZZIX.GetFinger(0, (byte*)pRawImageData, (byte*)pFeature);
-                    }
-                    if (isRunning)
-                    {
-                        // 이미지 포인터 -> Byte array
-                        for (int i = 0; i < rawImageData.Length; i++)
-                        {
-                            rawImageData[i] = Marshal.ReadByte(pRawImageData, i);
-                        }
-
-
-                        // 디바이스 정보 받기 (이미지 변환에 필요)
-                        int nProduct, nSensor, width, height;
-                        int* pnProduct = &nProduct;
-                        int* pnSensor = &nSensor;
-                        int* pWidth = &width;
-                        int* pHeight = &height;
-                        IZZIX.GetDevInfos(0, pnProduct, pnSensor);
-                        IZZIX.GetImageSize(nSensor, pWidth, pHeight);
-
-                        string sensorName = "";
-                        sensorName = IZZIX.GetSensorString(nSensor);
-                        Log.Debug("debug! imgae size : {0} * {1}, sensor : {2}", width, height, sensorName);
-
-                        // convert raw data to bitmap
-                        // bitmap file header size : sizeof(BITMAPINFO)+(sizeof(RGBQUAD)*color) = 16+4*256
-                        int bitmapInfoSize = 1040;
-                        imgBuffer = new byte[width * height + bitmapInfoSize];
-                        pImgBuffer = Marshal.AllocHGlobal(IMAGE_SIZE_MAX + bitmapInfoSize);
-
-                        IZZIX.ConvertImage((byte*)pRawImageData, (byte*)pImgBuffer, width, height);
-
-                        for (int i = 0; i < imgBuffer.Length; i++)
-                        {
-                            imgBuffer[i] = Marshal.ReadByte(pImgBuffer, i);
-                        }
-
-                        // test code : save bitmap
-                        /*string path = @".\save\tmp1.bmp";
-                        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
-                        fs.Write(imgBuffer, 0, width*height);
-                        fs.Close();*/
-                    }
+                    // *****free unmannaged memory*****
+                    // unsafe 상태로 사용한 자원 반환 (제대로 처리되지않으면 memory leak의 원인이 될 수 있음)
+                    Marshal.FreeHGlobal(pRawImageData);
+                    Marshal.FreeHGlobal(pFeature);
+                    Marshal.FreeHGlobal(pImgBuffer);
                 }
-                catch (ThreadInterruptedException e)
+                catch (Exception)
                 {
-                    
                 }
-                catch (Exception e)
-                {
-                    Log.Fatal(e.StackTrace);
-                }
-                finally
-                {
-                    try
-                    {
-                        // *****free unmannaged memory*****
-                        // unsafe 상태로 사용한 자원 반환 (제대로 처리되지않으면 memory leak의 원인이 될 수 있음)
-                        Marshal.FreeHGlobal(pRawImageData);
-                        Marshal.FreeHGlobal(pFeature);
-                        Marshal.FreeHGlobal(pImgBuffer);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    isRunning = false;
-                }
+                isRunning = false;
+            }
             //}
 
             return imgBuffer;
@@ -144,97 +149,102 @@ namespace CD1HW.Hardware
             byte[] imgBuffer = null;
             //lock (_insteance)
             //{
-                if (IZZIX.IsAvailableDevice(0) != 1)
-                {
-                    Log.Fatal("Fingerprint scanner is not available");
-                    return null;
-                }
+            if (IZZIX.IsAvailableDevice(0) != 1)
+            {
+                Log.Fatal("Fingerprint scanner is not available");
+                return null;
+            }
+
+            if (isRunning)
+            {
+                isRunning = false;
+                Thread.Sleep(300);
+            }
+            isRunning = true;
+
+            // libray 사용을 위한 포인터/버퍼 선언
+            IntPtr pRawImageData = IntPtr.Zero;
+            IntPtr pFeature = IntPtr.Zero;
+            IntPtr pImgBuffer = IntPtr.Zero;
+            try
+            {
+                // scan fingerprint
+                pRawImageData = Marshal.AllocHGlobal(IMAGE_SIZE_MAX);
+                pFeature = Marshal.AllocHGlobal(FEATURE_SIZE_ISO_MAX);
+
+                byte[] rawImageData = new byte[IMAGE_SIZE_MAX];
+                byte[] feature = new byte[FEATURE_SIZE_ISO_MAX];
+
+                // 디바이스 정보 받기 (이미지 변환에 필요)
+                int nProduct, nSensor, width, height;
+                int* pnProduct = &nProduct;
+                int* pnSensor = &nSensor;
+                int* pWidth = &width;
+                int* pHeight = &height;
+                IZZIX.GetDevInfos(0, pnProduct, pnSensor);
+                IZZIX.GetImageSize(nSensor, pWidth, pHeight);
+
+                string sensorName = "";
+                sensorName = IZZIX.GetSensorString(nSensor);
+                Log.Debug("debug! imgae size : {0} * {1}, sensor : {2}", width, height, sensorName);
+
+                //  스캔
+
+                //IZZIX.GetFinger(0, (byte*)pRawImageData, (byte*)pFeature);
+                float fakeScore;
+                float* pFakeScore = &fakeScore;
+                int result = IZZIX.GetFPImage(0, (byte*)pRawImageData, pWidth, pHeight, pFakeScore);
 
                 if (isRunning)
                 {
-                    isRunning = false;
-                    Thread.Sleep(300);
-                }
-                isRunning = true;
+                    // 이미지 포인터 -> Byte array
+                    for (int i = 0; i < rawImageData.Length; i++)
+                    {
+                        rawImageData[i] = Marshal.ReadByte(pRawImageData, i);
+                    }
 
-                // libray 사용을 위한 포인터/버퍼 선언
-                IntPtr pRawImageData = IntPtr.Zero;
-                IntPtr pFeature = IntPtr.Zero;
-                IntPtr pImgBuffer = IntPtr.Zero;
+
+                    
+
+                    // convert raw data to bitmap
+                    // bitmap file header size : sizeof(BITMAPINFO)+(sizeof(RGBQUAD)*color) = 16+4*256
+                    int bitmapInfoSize = 1040;
+                    imgBuffer = new byte[width * height + bitmapInfoSize];
+                    pImgBuffer = Marshal.AllocHGlobal(IMAGE_SIZE_MAX + bitmapInfoSize);
+
+                    IZZIX.ConvertImage((byte*)pRawImageData, (byte*)pImgBuffer, width, height);
+
+                    for (int i = 0; i < imgBuffer.Length; i++)
+                    {
+                        imgBuffer[i] = Marshal.ReadByte(pImgBuffer, i);
+                    }
+
+                    // test code : save bitmap
+                    /*string path = @".\save\tmp1.bmp";
+                    FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+                    fs.Write(imgBuffer, 0, width*height);
+                    fs.Close();*/
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.StackTrace);
+            }
+            finally
+            {
                 try
                 {
-                    // scan fingerprint
-                    pRawImageData = Marshal.AllocHGlobal(IMAGE_SIZE_MAX);
-                    pFeature = Marshal.AllocHGlobal(FEATURE_SIZE_ISO_MAX);
-
-                    byte[] rawImageData = new byte[IMAGE_SIZE_MAX];
-                    byte[] feature = new byte[FEATURE_SIZE_ISO_MAX];
-
-                    // 터치상태에서 스캔이 될때 (result == 1)이 될 때까지 반복적으로 스캔
-
-                    IZZIX.GetFinger(0, (byte*)pRawImageData, (byte*)pFeature);
-
-                    if (isRunning)
-                    {
-                        // 이미지 포인터 -> Byte array
-                        for (int i = 0; i < rawImageData.Length; i++)
-                        {
-                            rawImageData[i] = Marshal.ReadByte(pRawImageData, i);
-                        }
-
-
-                        // 디바이스 정보 받기 (이미지 변환에 필요)
-                        int nProduct, nSensor, width, height;
-                        int* pnProduct = &nProduct;
-                        int* pnSensor = &nSensor;
-                        int* pWidth = &width;
-                        int* pHeight = &height;
-                        IZZIX.GetDevInfos(0, pnProduct, pnSensor);
-                        IZZIX.GetImageSize(nSensor, pWidth, pHeight);
-
-                        string sensorName = "";
-                        sensorName = IZZIX.GetSensorString(nSensor);
-                        Log.Debug("debug! imgae size : {0} * {1}, sensor : {2}", width, height, sensorName);
-
-                        // convert raw data to bitmap
-                        // bitmap file header size : sizeof(BITMAPINFO)+(sizeof(RGBQUAD)*color) = 16+4*256
-                        int bitmapInfoSize = 1040;
-                        imgBuffer = new byte[width * height + bitmapInfoSize];
-                        pImgBuffer = Marshal.AllocHGlobal(IMAGE_SIZE_MAX + bitmapInfoSize);
-
-                        IZZIX.ConvertImage((byte*)pRawImageData, (byte*)pImgBuffer, width, height);
-
-                        for (int i = 0; i < imgBuffer.Length; i++)
-                        {
-                            imgBuffer[i] = Marshal.ReadByte(pImgBuffer, i);
-                        }
-
-                        // test code : save bitmap
-                        /*string path = @".\save\tmp1.bmp";
-                        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
-                        fs.Write(imgBuffer, 0, width*height);
-                        fs.Close();*/
-                    }
+                    // *****free unmannaged memory*****
+                    // unsafe 상태로 사용한 자원 반환 (제대로 처리되지않으면 memory leak의 원인이 될 수 있음)
+                    Marshal.FreeHGlobal(pRawImageData);
+                    Marshal.FreeHGlobal(pFeature);
+                    Marshal.FreeHGlobal(pImgBuffer);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Log.Fatal(e.StackTrace);
                 }
-                finally
-                {
-                    try
-                    {
-                        // *****free unmannaged memory*****
-                        // unsafe 상태로 사용한 자원 반환 (제대로 처리되지않으면 memory leak의 원인이 될 수 있음)
-                        Marshal.FreeHGlobal(pRawImageData);
-                        Marshal.FreeHGlobal(pFeature);
-                        Marshal.FreeHGlobal(pImgBuffer);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    isRunning = false;
-                }
+                isRunning = false;
+            }
             //}
 
             return imgBuffer;

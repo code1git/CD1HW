@@ -33,7 +33,10 @@ namespace CD1HW.WinFormUi
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            lock (_cv2Camera)
+            {
             System.Environment.Exit(0);
+            }
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)

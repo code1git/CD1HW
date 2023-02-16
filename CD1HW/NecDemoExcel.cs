@@ -12,7 +12,6 @@ namespace CD1HW
         private Dictionary<string, string> _necDemoAddr;
         public NecDemoExcel(ILogger<NecDemoExcel> logger, IOptions<AppSettings> options)
         {
-            Console.WriteLine("ccc");
             _logger = logger;
             _options = options.Value;
             _necDemoAddr = new Dictionary<string, string>();

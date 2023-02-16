@@ -31,6 +31,8 @@
     <PackageReference Include="OpenCvSharp4.Extensions" Version="4.7.0.20230115" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.7.0.20230115" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="stdole" Version="7.0.3303" />
@@ -60,6 +62,9 @@
       <HintPath>C:\Program Files\Common Files\WacomGSS\Florentis.InteropFlWizCOM.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Interop.wgssSTU">
+      <HintPath>C:\Program Files (x86)\Wacom STU SDK\COM\bin\x64\Interop.wgssSTU.dll</HintPath>
+    </Reference>
     <Reference Include="IzzixWarp">
       <HintPath>..\..\IzzixWarp\build\x64\Release\IzzixWarp.dll</HintPath>
       <Private>True</Private>
@@ -86,6 +91,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="izzixOEMAPI32_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Media\SignEnd.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Media\SignStart.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="nec_list.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

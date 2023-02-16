@@ -22,7 +22,11 @@ namespace CD1HW
             cv2Camera.CameraStart();
             NecDemoCsv necDemoCsv = ServiceProvider.GetRequiredService<NecDemoCsv>();
             necDemoCsv.ReadCsv();
+            WacomSTU wacomSTU = ServiceProvider.GetRequiredService<WacomSTU>();
+            //wacomSTU.StartPad();
 
+            Thread signPadThread = new Thread(() => wacomSTU.StartPad());
+            signPadThread.Start();
 
             Application.EnableVisualStyles();
             Thread UiThread = new Thread(() => { Application.Run(new NotifyIconForm(cv2Camera, ServiceProvider.GetRequiredService<OcrCamera>())); });

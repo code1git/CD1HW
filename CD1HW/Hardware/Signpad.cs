@@ -10,6 +10,7 @@ using System.IO;
 using Florentis;
 using stdole;
 using System.Threading;
+using Windows.Networking;
 
 namespace Code1HWSvr
 {
@@ -76,6 +77,12 @@ namespace Code1HWSvr
         {
             try
             {
+                if (name == null || name.Equals(""))
+                    name = " ";
+                if (dob == null || dob.Equals(""))
+                    dob = " ";
+                if (addr == null)
+                    addr = "";
                 lock (Callback)
                 {
                     bool isPadConnect = WizCtl.PadConnect();
@@ -145,13 +152,19 @@ namespace Code1HWSvr
                         while (cvSize < fstNameGpSize.Width);
 
                         pointOrigin = new Point((800-(int)fstNameGpSize.Width)/2, (480-(int)fstNameGpSize.Height)/2);
-                        graphicsPath.AddString(fstName, font.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
                     }
                     // 한글 이름인 경우
                     else
                     {
                         // 이름 글자수에 따라 그리는 위치 변경
-                        if (name.Length < 3)
+                        if (name.Length > 4)
+                        {
+                            SizeF nameGpSize = graphics.MeasureString(name, font, new PointF(0, 0), StringFormat.GenericTypographic);
+                            fontSize = fontSize -= 5f;
+                            font = new System.Drawing.Font("돋움체", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                            pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 - (int)nameGpSize.Height) / 2);
+                        }
+                        else if (name.Length == 4)
                         {
                             pointOrigin = new Point(200, 150);
                         }
@@ -164,11 +177,50 @@ namespace Code1HWSvr
                             pointOrigin = new Point(30, 150);
                         }
                         SizeF tsize = graphics.MeasureString(name, font, new PointF(0, 0), StringFormat.GenericTypographic);
-                        graphicsPath.AddString(name, font.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
                     }
+                    graphicsPath.AddString(name, font.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
 
                     graphics.DrawPath(pen, graphicsPath);
                     //graphics.DrawString(name, font, Brushes.Black, pointOrigin, StringFormat.GenericTypographic );
+
+                    // 주소그리기
+                    string[] addrArr = new string[2];
+                    if (addr.Length < 17)
+                    {
+                        addrArr[0] = addr;
+                    }
+                    else
+                    {
+                        addrArr[0] = addr.Substring(0, ((int)addr.Length/2));
+                        if(addr.Length %2 == 0)
+                        {
+                            addrArr[1] = addr.Substring(((int)addr.Length / 2), ((int)addr.Length / 2));
+                        }
+                        else
+                        {
+                            addrArr[1] = addr.Substring(((int)addr.Length / 2), ((int)addr.Length / 2) + 1);
+                        }
+                    }
+                    float addrFontSize = 50f;
+                    System.Drawing.Font addrFont = new System.Drawing.Font("굴림체", addrFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                    float cvSize2 = 780;
+                    SizeF fstAddrGpSize;
+                    do
+                    {
+                        fstAddrGpSize = graphics.MeasureString(addrArr[1], addrFont, new PointF(0, 0), StringFormat.GenericTypographic);
+                        addrFontSize = addrFontSize -= 2f;
+                        addrFont = new System.Drawing.Font("굴림체", addrFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                    }
+                    while (cvSize2 < fstAddrGpSize.Width);
+
+                    pointOrigin = new Point(10, 50);
+                    graphics.DrawString(addrArr[0], addrFont, Brushes.Gray, pointOrigin);
+                    pointOrigin = new Point(10, 100);
+                    graphics.DrawString(addrArr[1], addrFont, Brushes.Gray, pointOrigin);
+
+
+
+
 
                     byte[] byteArr = null;
                     if (bitmap != null)
@@ -191,9 +243,9 @@ namespace Code1HWSvr
                     WizCtl.AddObject(ObjectType.ObjectText, "why", "right", "top", dob, null);
                     WizCtl.Font = Pad.fontmedium;
                     // 주소가 너무 길면 자른다.
-                    if (addr.Length > 18)
-                        addr = addr.Substring(0, 16) + "...";
-                    WizCtl.AddObject(ObjectType.ObjectText, "txt", "left", 50, addr, null);
+                    //if (addr.Length > 18)
+                    //    addr = addr.Substring(0, 16) + "...";
+                    //WizCtl.AddObject(ObjectType.ObjectText, "txt", "left", 50, addr, null);
 
                     WizCtl.AddObject(ObjectType.ObjectSignature, "Sig", 0, 0, SigCtl.Signature, null);
 
@@ -221,6 +273,7 @@ namespace Code1HWSvr
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 //logger.Fatal(e.StackTrace);
             }
 
