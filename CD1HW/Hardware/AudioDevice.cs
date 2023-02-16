@@ -15,15 +15,19 @@ namespace CD1HW.Hardware
 {
     public class AudioDevice
     {
-        private readonly ILogger<AudioDevice> _logger;
-
+        /*private readonly ILogger<AudioDevice> _logger;
         public AudioDevice(ILogger<AudioDevice> logger)
         {
             _logger = logger;
-        }
+            
+        }*/
+
+        private AudioDevice() { }
+        private static readonly Lazy<AudioDevice> _insteance = new Lazy<AudioDevice>(() => new AudioDevice());
+        public static AudioDevice Instance { get { return _insteance.Value; } }
 
         private int inputDeviceIdx = -1;
-        public MMDevice outputDevice;
+        public  MMDevice outputDevice;
         private WaveInEvent waveSource;
         private WaveFileWriter waveFile;
         private WasapiOut wasapiOut;
@@ -66,7 +70,7 @@ namespace CD1HW.Hardware
 
             waveFile = new WaveFileWriter(saveFilePath, waveSource.WaveFormat);
 
-            _logger.LogInformation("st rec");
+            //_logger.LogInformation("st rec");
             waveSource.StartRecording();
             //Thread.Sleep(timemills);
             //logger.Debug("ed rec");
@@ -112,11 +116,11 @@ namespace CD1HW.Hardware
             }
             if (inputDeviceIdx == -1)
             {
-                _logger.LogInformation("Audio Input Device Not Found");
+                //_logger.LogInformation("Audio Input Device Not Found");
             }
             else
             {
-                _logger.LogInformation("Audio In : " + WaveIn.GetCapabilities(inputDeviceIdx).ProductName);
+                //_logger.LogInformation("Audio In : " + WaveIn.GetCapabilities(inputDeviceIdx).ProductName);
             }
         }
 
@@ -134,13 +138,13 @@ namespace CD1HW.Hardware
 
             if (outputDevice == null)
             {
-                _logger.LogInformation("Audio output Device Not Found");
+                //_logger.LogInformation("Audio output Device Not Found");
             }
             else
             {
-                _logger.LogInformation("Audio out : " + outputDevice.DeviceFriendlyName);
+                //_logger.LogInformation("Audio out : " + outputDevice.DeviceFriendlyName);
             }
-            //enumerator.Dispose();
+            enumerator.Dispose();
         }
     }
 }

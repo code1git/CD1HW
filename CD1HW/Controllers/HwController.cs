@@ -10,7 +10,6 @@ using System.Net;
 using System.Net.Http;
 using OpenCvSharp;
 using Code1HWSvr;
-using WacomSTUTest.Hardware;
 using System.Drawing;
 
 namespace CD1HW.Controllers
@@ -27,14 +26,14 @@ namespace CD1HW.Controllers
         private readonly IzzixFingerprint _izzixFingerprint;
         private readonly WacomSTU _wacomSTU;
 
-        public HwController(ILogger<HwController> logger, Cv2Camera cv2Camera, OcrCamera ocrCamera, AudioDevice audioDevice,NecDemoCsv necCsv, IzzixFingerprint izzixFingerprint, WacomSTU wacomSTU)
+        public HwController(ILogger<HwController> logger, Cv2Camera cv2Camera, OcrCamera ocrCamera, NecDemoCsv necCsv, IzzixFingerprint izzixFingerprint, WacomSTU wacomSTU)
         {
             _logger = logger;
             _cv2Camera = cv2Camera;
             //_cv2Camera = Cv2Camera.Instance;
             _ocrCamera = ocrCamera;
             _necCsv = necCsv;
-            _audioDevice = audioDevice;
+            _audioDevice = AudioDevice.Instance;
             _izzixFingerprint = izzixFingerprint;
             _wacomSTU = wacomSTU;
 
@@ -211,7 +210,7 @@ namespace CD1HW.Controllers
             }
             return _ocrCamera.finger_img;
         }
-
+        [HttpPost("/call_padandfinger_old")]
         public string callPad(OcrResult ocrMsg)
         {   
             _logger.LogInformation("call finger print scanner and sing pad by web");
@@ -263,7 +262,7 @@ namespace CD1HW.Controllers
                 catch (Exception e)
                 {
                     _logger.LogError(e.Message);
-                    _audioDevice.outputDevice = null;
+                    //_audioDevice.outputDevice = null;
                 }
 
                 while (fingerScanImg == null && !System.IO.File.Exists(Path.Combine(TEMP_DIR, filename)))
@@ -308,7 +307,7 @@ namespace CD1HW.Controllers
                 catch (Exception e)
                 {
                     _logger.LogError(e.Message);
-                    _audioDevice.outputDevice = null;
+                    //_audioDevice.outputDevice = null;
                 }
                     /////
                 }
@@ -358,7 +357,7 @@ namespace CD1HW.Controllers
                 catch (Exception e)
                 {
                     _logger.LogError(e.Message);
-                    _audioDevice.outputDevice = null;
+                    //_audioDevice.outputDevice = null;
                 }
 
 
@@ -374,16 +373,34 @@ namespace CD1HW.Controllers
                     // sign pad completed
                     if (_wacomSTU.completeFlag == 1)
                     {
+                        try
+                        {
+                            _audioDevice.StopSound();
+                            _audioDevice.PlaySound(@"./Media/SignEnd.wav");
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e.Message);
+                            //_audioDevice.outputDevice = null;
+                        }
                         _logger.LogInformation("sign completed ");
                         fingerprintThread.Interrupt();
-                        fingerprintThread.Join();
                         _ocrCamera.finger_img = null;
                     }
                     else if (_wacomSTU.completeFlag == 2)
                     {
+                        try
+                        {
+                            _audioDevice.StopSound();
+                            _audioDevice.PlaySound(@"./Media/SignCancel.wav");
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e.Message);
+                            //_audioDevice.outputDevice = null;
+                        }
                         _logger.LogInformation("sign canceled");
                         fingerprintThread.Interrupt();
-                        fingerprintThread.Join();
                         _ocrCamera.finger_img = null;
                         _ocrCamera.sign_img = null;
                     }
@@ -400,34 +417,18 @@ namespace CD1HW.Controllers
                 {
                     _logger.LogError(e.Message);
                 }
-                try
-                {
-                    _audioDevice.StopSound();
-                    _audioDevice.PlaySound(@"./Media/SignEnd.wav");
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _audioDevice.outputDevice = null;
-                }
+
             }
 
             return "singpad / fingerprint scanner";
         }
 
 
-        [HttpGet("/padandfinger_cancel")]
-        public string SignnFingerCancel()
+        [HttpGet("/cancel_padandfinger")]
+        public string CancelSignnFinger()
         {
             _wacomSTU.completeFlag = 2;
             return "cancel singpad / fingerprint scanner";
-        }
-
-        [HttpGet("/pad")]
-        public string Pad3()
-        {
-            _wacomSTU.SetSignPad("전병현", "860729", "김수환무거북이와두루미");
-            return "test";
         }
     }
 

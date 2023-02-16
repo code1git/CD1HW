@@ -9,11 +9,13 @@ namespace CD1HW.Hardware
     {
         private readonly ILogger<WacomSTU> _logger;
         private readonly OcrCamera _ocrCamera;
+        private readonly AudioDevice _audioDevice;
 
         public WacomSTU(ILogger<WacomSTU> logger, OcrCamera ocrCamera)
         {
             _logger = logger;
             _ocrCamera = ocrCamera;
+            _audioDevice = AudioDevice.Instance;
         }
 
         /*
@@ -109,6 +111,8 @@ namespace CD1HW.Hardware
 
             m_isDown = 0;
 
+
+
             
         }
 
@@ -144,13 +148,14 @@ namespace CD1HW.Hardware
         }
 
 
-        private void btnClear_Click(object sender, EventArgs e)
+        private async void btnClear_Click(object sender, EventArgs e)
         {
             if (m_penData.Count != 0 || m_penTimeData.Count != 0)
             {
                 clearScreen();
             }
             ResetPadImage();
+
         }
 
         public void StartPad()
@@ -270,7 +275,7 @@ namespace CD1HW.Hardware
                     //SizeF s = this.AutoScaleDimensions;
                     float inkWidthMM = 0.7F;
                     //m_penInk = new Pen(Color.DarkBlue, inkWidthMM / 25.4F * ((s.Width + s.Height) / 2F));
-                    m_penInk = new Pen(Color.DarkBlue, inkWidthMM / 25.4F * (1200 / 2F));
+                    m_penInk = new Pen(Color.DarkBlue, inkWidthMM / 25.4F * (400 / 2F));
 
                     m_penInk.StartCap = m_penInk.EndCap = System.Drawing.Drawing2D.LineCap.Round;
                     m_penInk.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
@@ -356,85 +361,149 @@ namespace CD1HW.Hardware
 
                 Point pointOrigin;
 
-                float fontSize = 180f;
-                Font padFont = new Font("돋움체", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                float fontSize;
+                //Font padFont = new Font("돋움체", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                Font padFont;
+                float cvSize = 780f;
+
+                
+
+                // 주소그리기
+                string[] addrArr = new string[5];
+                if (addr.Length < 31)
+                {
+                    addrArr[0] = addr;
+                }
+                else if (name.Length < 61)
+                {
+                    /*if (addr.Length % 2 == 0)
+                    {
+                        addrArr[0] = addr.Substring(0, (int)(addr.Length / 2));
+                        addrArr[1] = addr.Substring((int)(addr.Length / 2), (int)(addr.Length / 2));
+                    }
+                    else
+                    {
+                        addrArr[0] = addr.Substring(0, (int)(addr.Length / 2)+1);
+                        addrArr[1] = addr.Substring((int)(addr.Length / 2)+1, (int)(addr.Length / 2));
+                    }*/
+                    addrArr[0] = addr.Substring(0, 30);
+                    addrArr[1] = addr.Substring(30, addr.Length - 30);
+                }
+                else
+                {
+                    addrArr[0] = addr.Substring(0, 30);
+                    addrArr[1] = addr.Substring(30, 30);
+                    addrArr[2] = addr.Substring(60, addr.Length - 60);
+                }
+                fontSize = 30f;
+                padFont = new Font("D2Coding", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                SizeF fontGpSize;
+                do
+                {
+                    fontGpSize = graphics.MeasureString(addrArr[0], padFont, new PointF(0, 0), StringFormat.GenericTypographic);
+                    fontSize = fontSize -= 1f;
+                    padFont = new Font("D2Coding", fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                }
+                while (cvSize < fontGpSize.Width);
+
+                if (addrArr[1] == null)
+                {
+                    pointOrigin = new Point(5, 60);
+                    graphics.DrawString(addrArr[0], padFont, Brushes.Black, pointOrigin);
+                }
+                else
+                {
+                    pointOrigin = new Point(5, 42);
+                    graphics.DrawString(addrArr[0], padFont, Brushes.Black, pointOrigin);
+                    pointOrigin = new Point(5, 84);
+                    graphics.DrawString(addrArr[1], padFont, Brushes.Black, pointOrigin);
+                }
+
+                graphics.DrawLine(Pens.Red, new Point(5, 130), new Point(795, 130));
+
+                string[] nameArr = new string[5];
+                if (name.Length < 23)
+                {
+                    nameArr[0] = name;
+                }
+                else
+                {
+                    if (name.Length % 2 == 0)
+                    {
+                        nameArr[0] = name.Substring(0, (int)(name.Length / 2));
+                        nameArr[1] = name.Substring((int)(name.Length / 2), (int)(name.Length / 2));
+                    }
+                    else
+                    {
+                        nameArr[0] = name.Substring(0, (int)(name.Length / 2)+1);
+                        nameArr[1] = name.Substring((int)(name.Length / 2)+1, (int)(name.Length / 2));
+                    }
+
+                }
+
+                fontSize = 180f;
+                padFont = new Font("D2Coding", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
                 // 이름 글자수에 따라 그리는 위치 변경
                 if (name.Length > 4)
                 {
-                    float cvSize = 740f;
+                    
                     SizeF nameGpSize;
                     do
                     {
-                        nameGpSize = graphics.MeasureString(name, padFont, new PointF(0, 0), StringFormat.GenericTypographic);
-                        fontSize = fontSize -= 5f;
-                        padFont = new Font("돋움체", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                        nameGpSize = graphics.MeasureString(nameArr[0], padFont, new PointF(5, 130), StringFormat.GenericTypographic);
+                        fontSize = fontSize -= 1f;
+                        padFont = new Font("D2Coding", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
                     }
                     while (cvSize < nameGpSize.Width);
-                    pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 - (int)nameGpSize.Height) / 2);
+                    if (nameArr[1] == null)
+                    {
+                        pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 - (int)nameGpSize.Height) / 2);
+                        graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
+                    }
+                    else
+                    {
+                        pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480/2) - (int)nameGpSize.Height);
+                        graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
+                        pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 / 2));
+                        graphicsPath.AddString(nameArr[1], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
+
+                    }
+
                 }
                 else if (name.Length == 4)
                 {
                     pointOrigin = new Point(200, 150);
+                    graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
+
                 }
                 else if (name.Length == 3)
                 {
                     pointOrigin = new Point(120, 150);
-                }
-                else
-                {
-                    pointOrigin = new Point(30, 150);
-                }
+                    graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
 
-                graphicsPath.AddString(name, padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
-
+                }
                 graphics.DrawPath(pen, graphicsPath);
                 //graphics.DrawString(name, font, Brushes.Black, pointOrigin, StringFormat.GenericTypographic );
 
-                // 주소그리기
-                string[] addrArr = new string[2];
-                if (addr.Length < 17)
-                {
-                    addrArr[0] = addr;
-                }
-                else
-                {
-                    addrArr[0] = addr.Substring(0, ((int)addr.Length / 2));
-                    if (addr.Length % 2 == 0)
-                    {
-                        addrArr[1] = addr.Substring(((int)addr.Length / 2), ((int)addr.Length / 2));
-                    }
-                    else
-                    {
-                        addrArr[1] = addr.Substring(((int)addr.Length / 2), ((int)addr.Length / 2) + 1);
-                    }
-                }
-                float addrFontSize = 50f;
-                padFont = new Font("굴림체", addrFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-                float cvSize2 = 780;
-                SizeF fstAddrGpSize;
-                do
-                {
-                    fstAddrGpSize = graphics.MeasureString(addrArr[1], padFont, new PointF(0, 0), StringFormat.GenericTypographic);
-                    addrFontSize = addrFontSize -= 2f;
-                    padFont = new Font("굴림체", addrFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-                }
-                while (cvSize2 < fstAddrGpSize.Width);
+                //upper line
+                fontSize = 30f;
+                padFont = new Font("D2Coding", fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                pointOrigin = new Point(3, 10);
 
-                pointOrigin = new Point(10, 50);
-                graphics.DrawString(addrArr[0], padFont, Brushes.Black, pointOrigin);
-                pointOrigin = new Point(10, 100);
-                graphics.DrawString(addrArr[1], padFont, Brushes.Black, pointOrigin);
+                if (name.Length > 18)
+                {
+                    name = name.Substring(0, 17);
+                    name = name + "...";
+                }
 
-
-                //
-                padFont = new Font("굴림체", 40f, FontStyle.Regular, GraphicsUnit.Pixel);
-                pointOrigin = new Point(10, 10);
                 graphics.DrawString(name, padFont, Brushes.Black, pointOrigin);
                 SizeF tmpMeasure = graphics.MeasureString(birth, padFont, new PointF(0, 0), StringFormat.GenericTypographic);
-                pointOrigin = new Point(780 - (int) tmpMeasure.Width, 10);
+                pointOrigin = new Point(780 - (int)tmpMeasure.Width, 10);
+
                 graphics.DrawString(birth, padFont, Brushes.Black, pointOrigin);
 
+                graphics.DrawLine(Pens.Red, new Point(5, 42), new Point(795, 42));
 
                 /*byte[] byteArr = null;
                 if (bitmap != null)
@@ -445,6 +514,7 @@ namespace CD1HW.Hardware
                 }*/
 
                 graphics.Dispose();
+                padFont.Dispose();
             }
 
 
@@ -455,7 +525,9 @@ namespace CD1HW.Hardware
                 gfx.Clear(Color.White);
                 gfx.DrawImage(bitmap, 0, 0, 800, 480);
 
-                Font font = new Font(FontFamily.GenericSansSerif, m_btns[0].Bounds.Height / 2F, GraphicsUnit.Pixel);
+                //Font font = new Font(FontFamily.GenericSansSerif, m_btns[0].Bounds.Height / 2F, GraphicsUnit.Pixel);
+                Font font = new Font(FontFamily.GenericSansSerif, m_btns[0].Bounds.Height / 2F, FontStyle.Bold, GraphicsUnit.Pixel);
+
                 StringFormat sf = new StringFormat();
                 sf.Alignment = StringAlignment.Center;
                 sf.LineAlignment = StringAlignment.Center;
@@ -475,7 +547,11 @@ namespace CD1HW.Hardware
                 {
                     if (useColor)
                     {
+                        if (i == 0)
+                        gfx.FillRectangle(Brushes.Yellow, m_btns[i].Bounds);
+                        else
                         gfx.FillRectangle(Brushes.LightGray, m_btns[i].Bounds);
+
                     }
                     gfx.DrawRectangle(Pens.Black, m_btns[i].Bounds);
                     gfx.DrawString(m_btns[i].Text, font, Brushes.Black, m_btns[i].Bounds, sf);

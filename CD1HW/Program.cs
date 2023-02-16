@@ -11,7 +11,7 @@ namespace CD1HW
     {
         public static IServiceProvider ServiceProvider { get; set; }
 
-        [STAThread]
+        //[STAThread]
         public static void Main(string[] args)
         {
             IWebHost webHost = CreateWebHostBuilder(args).Build();
@@ -27,6 +27,9 @@ namespace CD1HW
 
             Thread signPadThread = new Thread(() => wacomSTU.StartPad());
             signPadThread.Start();
+
+            AudioDevice audioDevice = AudioDevice.Instance;
+            audioDevice.PlaySound(@"./Media/DiviceInit.wav");
 
             Application.EnableVisualStyles();
             Thread UiThread = new Thread(() => { Application.Run(new NotifyIconForm(cv2Camera, ServiceProvider.GetRequiredService<OcrCamera>())); });
