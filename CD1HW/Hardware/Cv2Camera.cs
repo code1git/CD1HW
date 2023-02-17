@@ -86,7 +86,7 @@ namespace CD1HW.Hardware
                                 //float cropRight = src.Width * 0.2f;
                                 //float cropTop = src.Height * 0.1f;
                                 //float cropBotom = src.Height * 0.1f;
-                                /*if(src.Width > 1900 && src.Height > 1050)
+                                if(src.Width > 1900 && src.Height > 1050)
                                 {
                                     float cropLeft = 300f;
                                     float cropTop = 80f;
@@ -94,8 +94,8 @@ namespace CD1HW.Hardware
                                     float cropBotom = 1020f;
                                     Rect cropRectangle = new Rect((int) cropLeft, (int) cropTop, (int)(cropRight-cropLeft), (int) (cropBotom-cropTop));
                                     src = src.SubMat(cropRectangle);
-                                }*/
-                                if (src.Width > 1900 && src.Height > 1050)
+                                }
+                                /*if (src.Width > 1900 && src.Height > 1050)
                                 {
                                     float cropLeft = 150f;
                                     float cropTop = 80f;
@@ -103,7 +103,7 @@ namespace CD1HW.Hardware
                                     float cropBotom = 1020f;
                                     Rect cropRectangle = new Rect((int)cropLeft, (int)cropTop, (int)(cropRight - cropLeft), (int)(cropBotom - cropTop));
                                     src = src.SubMat(cropRectangle);
-                                }
+                                }*/
                             }
                             Bitmap bitmapImage = BitmapConverter.ToBitmap(src);
 

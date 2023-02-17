@@ -15,16 +15,16 @@ namespace CD1HW.Hardware
 {
     public class AudioDevice
     {
-        /*private readonly ILogger<AudioDevice> _logger;
+        private readonly ILogger<AudioDevice> _logger;
         public AudioDevice(ILogger<AudioDevice> logger)
         {
             _logger = logger;
             
-        }*/
+        }
 
-        private AudioDevice() { }
+        /*private AudioDevice() { }
         private static readonly Lazy<AudioDevice> _insteance = new Lazy<AudioDevice>(() => new AudioDevice());
-        public static AudioDevice Instance { get { return _insteance.Value; } }
+        public static AudioDevice Instance { get { return _insteance.Value; } }*/
 
         private int inputDeviceIdx = -1;
         public  MMDevice outputDevice;

@@ -20,16 +20,27 @@ namespace CD1HW
             ServiceProvider = webHost.Services;
             Cv2Camera cv2Camera= ServiceProvider.GetRequiredService<Cv2Camera>();
             cv2Camera.CameraStart();
-            NecDemoCsv necDemoCsv = ServiceProvider.GetRequiredService<NecDemoCsv>();
-            necDemoCsv.ReadCsv();
+            /*NecDemoCsv necDemoCsv = ServiceProvider.GetRequiredService<NecDemoCsv>();
+            necDemoCsv.ReadCsv();*/
+            NecDemoExcel necDemoExcel = ServiceProvider.GetRequiredService<NecDemoExcel>();
+            necDemoExcel.ReadDoc();
             WacomSTU wacomSTU = ServiceProvider.GetRequiredService<WacomSTU>();
             //wacomSTU.StartPad();
 
             Thread signPadThread = new Thread(() => wacomSTU.StartPad());
             signPadThread.Start();
 
-            AudioDevice audioDevice = AudioDevice.Instance;
-            audioDevice.PlaySound(@"./Media/DiviceInit.wav");
+            //AudioDevice audioDevice = AudioDevice.Instance;
+            AudioDevice audioDevice = ServiceProvider.GetRequiredService<AudioDevice>();
+            try
+            {
+                audioDevice.PlaySound(@"./Media/DiviceInit.wav");
+
+            }
+            catch (Exception)
+            {
+
+            }
 
             Application.EnableVisualStyles();
             Thread UiThread = new Thread(() => { Application.Run(new NotifyIconForm(cv2Camera, ServiceProvider.GetRequiredService<OcrCamera>())); });

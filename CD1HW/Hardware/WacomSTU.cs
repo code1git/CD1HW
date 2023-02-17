@@ -9,13 +9,13 @@ namespace CD1HW.Hardware
     {
         private readonly ILogger<WacomSTU> _logger;
         private readonly OcrCamera _ocrCamera;
-        private readonly AudioDevice _audioDevice;
+        //private readonly AudioDevice _audioDevice;
 
         public WacomSTU(ILogger<WacomSTU> logger, OcrCamera ocrCamera)
         {
             _logger = logger;
             _ocrCamera = ocrCamera;
-            _audioDevice = AudioDevice.Instance;
+            //_audioDevice = AudioDevice.Instance;
         }
 
         /*
@@ -123,11 +123,7 @@ namespace CD1HW.Hardware
             int currentPenDataOptionMode = getPenDataOptionMode();
             setPenDataOptionMode(currentPenDataOptionMode);
 
-            Bitmap compImage = Properties.Resources.sign_end;
-            SetPadImage(compImage);
-            Thread.Sleep(2000);
-            Bitmap initImage = Properties.Resources.sign_start;
-            SetPadImage(initImage);
+            
 
             completeFlag = 1;
         }
@@ -364,6 +360,7 @@ namespace CD1HW.Hardware
                 float fontSize;
                 //Font padFont = new Font("돋움체", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
                 Font padFont;
+                string fontName = _ocrCamera.SignPadFont;
                 float cvSize = 780f;
 
                 
@@ -396,13 +393,13 @@ namespace CD1HW.Hardware
                     addrArr[2] = addr.Substring(60, addr.Length - 60);
                 }
                 fontSize = 30f;
-                padFont = new Font("D2Coding", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                padFont = new Font(fontName, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
                 SizeF fontGpSize;
                 do
                 {
                     fontGpSize = graphics.MeasureString(addrArr[0], padFont, new PointF(0, 0), StringFormat.GenericTypographic);
                     fontSize = fontSize -= 1f;
-                    padFont = new Font("D2Coding", fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    padFont = new Font(fontName, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
                 }
                 while (cvSize < fontGpSize.Width);
 
@@ -442,53 +439,47 @@ namespace CD1HW.Hardware
                 }
 
                 fontSize = 180f;
-                padFont = new Font("D2Coding", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                padFont = new Font(fontName, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
                 // 이름 글자수에 따라 그리는 위치 변경
-                if (name.Length > 4)
+
+                SizeF nameGpSize;
+                do
                 {
-                    
-                    SizeF nameGpSize;
-                    do
+                    nameGpSize = graphics.MeasureString(nameArr[0], padFont, new PointF(5, 130), StringFormat.GenericTypographic);
+                    if (nameArr[1] != null)
                     {
-                        nameGpSize = graphics.MeasureString(nameArr[0], padFont, new PointF(5, 130), StringFormat.GenericTypographic);
-                        fontSize = fontSize -= 1f;
-                        padFont = new Font("D2Coding", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                        SizeF tempSize = graphics.MeasureString(nameArr[1], padFont, new PointF(5, 130), StringFormat.GenericTypographic);
+                        if(tempSize.Width > nameGpSize.Width)
+                        {
+                            nameGpSize = tempSize;
+                        }
                     }
-                    while (cvSize < nameGpSize.Width);
-                    if (nameArr[1] == null)
-                    {
-                        pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 - (int)nameGpSize.Height) / 2);
-                        graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
-                    }
-                    else
-                    {
-                        pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480/2) - (int)nameGpSize.Height);
-                        graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
-                        pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 / 2));
-                        graphicsPath.AddString(nameArr[1], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
-
-                    }
-
+                    fontSize = fontSize -= 1f;
+                    padFont = new Font(fontName, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
                 }
-                else if (name.Length == 4)
+                while (cvSize < nameGpSize.Width);
+                if (nameArr[1] == null)
                 {
-                    pointOrigin = new Point(200, 150);
+                    pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 - (int)nameGpSize.Height) / 2);
                     graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
-
                 }
-                else if (name.Length == 3)
+                else
                 {
-                    pointOrigin = new Point(120, 150);
+                    pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480/2) - (int)nameGpSize.Height);
                     graphicsPath.AddString(nameArr[0], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
+                    pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 / 2));
+                    graphicsPath.AddString(nameArr[1], padFont.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
 
                 }
+
+
                 graphics.DrawPath(pen, graphicsPath);
                 //graphics.DrawString(name, font, Brushes.Black, pointOrigin, StringFormat.GenericTypographic );
 
                 //upper line
                 fontSize = 30f;
-                padFont = new Font("D2Coding", fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                padFont = new Font("돋움체", fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
                 pointOrigin = new Point(3, 10);
 
                 if (name.Length > 18)

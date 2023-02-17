@@ -29,10 +29,11 @@ namespace CD1HW
             services.AddSwaggerGen();
             services.AddGrpc();
             services.AddSingleton<OcrCamera>();
+            services.AddSingleton<AudioDevice>();
             services.AddSingleton<Cv2Camera>();
             services.AddSingleton<AudioDevice>();
             services.AddScoped<NotifyIconForm>();
-            services.AddSingleton<NecDemoCsv>();
+            services.AddSingleton<NecDemoExcel>();
             services.AddSingleton<IzzixFingerprint>();
             services.AddSingleton<WacomSTU>();
             services.AddCors(opctions =>

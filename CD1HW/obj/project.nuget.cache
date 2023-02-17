@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YvFZ0//1r7FIs/aBHiLMdN4eKN39LzyTCVmshXxQ50jmk9FLnvVJadW9dRXJyeJXgyWk5D5TZdsR03NJpRdxRA==",
+  "dgSpecHash": "6qk6sfPCAYlHt7lyXlSvk8W6aDh6dpNAHnTP7C9WDGsbNtfx69OKZvzR5G+4Jln9+ojCgVb7upi0c1rrxT1xSQ==",
   "success": true,
   "projectFilePath": "D:\\BH\\workspace\\CD1HW\\CD1HW\\CD1HW.csproj",
   "expectedPackageFiles": [
@@ -30,12 +30,12 @@
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
-    "C:\\Users\\yousu\\.nuget\\packages\\microsoft.office.interop.excel\\15.0.4795.1001\\microsoft.office.interop.excel.15.0.4795.1001.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.visualstudio.sdk.embedinteroptypes\\15.0.16\\microsoft.visualstudio.sdk.embedinteroptypes.15.0.16.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
+    "C:\\Users\\yousu\\.nuget\\packages\\miniexcel\\1.30.1\\miniexcel.1.30.1.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\naudio\\2.1.0\\naudio.2.1.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\naudio.asio\\2.1.0\\naudio.asio.2.1.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\naudio.core\\2.1.0\\naudio.core.2.1.0.nupkg.sha512",

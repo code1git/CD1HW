@@ -7,7 +7,9 @@
         public int CamIdx { get; set; }
         public string CameraBackend { get; set; }
         public string NecDemoFilePath { get; set;}
+        public string NecDemoFileType { get; set; }
         public string ProductType { get; set; }
+        public string SignPadFont { get; set; }
     }
 }
 

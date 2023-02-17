@@ -21,30 +21,29 @@ namespace CD1HW.Controllers
         private readonly ILogger<HwController> _logger;
         private readonly Cv2Camera _cv2Camera;
         private readonly OcrCamera _ocrCamera;
-        private readonly NecDemoCsv _necCsv;
+        private readonly NecDemoExcel _necExcel;
         private readonly AudioDevice _audioDevice;
         private readonly IzzixFingerprint _izzixFingerprint;
         private readonly WacomSTU _wacomSTU;
 
-        public HwController(ILogger<HwController> logger, Cv2Camera cv2Camera, OcrCamera ocrCamera, NecDemoCsv necCsv, IzzixFingerprint izzixFingerprint, WacomSTU wacomSTU)
+        public HwController(ILogger<HwController> logger, Cv2Camera cv2Camera, OcrCamera ocrCamera, NecDemoExcel necExcel, IzzixFingerprint izzixFingerprint, WacomSTU wacomSTU, AudioDevice audioDevice)
         {
             _logger = logger;
             _cv2Camera = cv2Camera;
             //_cv2Camera = Cv2Camera.Instance;
             _ocrCamera = ocrCamera;
-            _necCsv = necCsv;
-            _audioDevice = AudioDevice.Instance;
+            _necExcel = necExcel;
+            //_audioDevice = AudioDevice.Instance;
+            _audioDevice = audioDevice;
             _izzixFingerprint = izzixFingerprint;
             _wacomSTU = wacomSTU;
-
-            
         }
         
         [HttpGet("/nametest")]
         public string NameTest(string name)
         {
             _ocrCamera.name = name;
-            string addr = _necCsv.GetAddr(name);
+            string addr = _necExcel.GetAddr(name);
             if (addr.Equals(""))
                 addr = "addr not found";
             _ocrCamera.addr = addr;
@@ -115,7 +114,7 @@ namespace CD1HW.Controllers
         }*/
 
         [HttpPost("/query_addr_4_nec")]
-        public List<NecDemoCsv.Person> NecAddr(CD1HW.Model.OcrResult ocrResult)
+        public List<NecDemoExcel.Person> NecAddr(CD1HW.Model.OcrResult ocrResult)
         {
             string name = ocrResult.name.Replace("-", "").Replace(".", "").Replace(" ", "");
             string regnum = ocrResult.regnum.Replace("-", "").Replace(".", "").Replace(" ","");
@@ -125,7 +124,7 @@ namespace CD1HW.Controllers
                 birth = birth.Substring(2, 6);
             }
             Console.WriteLine(birth);
-            List<NecDemoCsv.Person> people = _necCsv.GetAddr(name, regnum, birth);
+            List<NecDemoExcel.Person> people = _necExcel.GetAddr(name, regnum, birth);
             
             return people;
         }
@@ -168,7 +167,7 @@ namespace CD1HW.Controllers
                 // 선관위 전용
                 if (_ocrCamera.ProductType.Equals("NEC"))
                 {
-                    _ocrCamera.addr = _necCsv.GetAddr(ocrResult.name);
+                    _ocrCamera.addr = _necExcel.GetAddr(ocrResult.name);
                 }
 
             }
@@ -291,23 +290,22 @@ namespace CD1HW.Controllers
                     else if (fingerScanImg != null)
                     {
                         _logger.LogInformation("finger scaned");
-                        Signpad.closeWizard();
                         _ocrCamera.finger_img = Convert.ToBase64String(fingerScanImg);
+                    }
+                    try
+                    {
+                        _audioDevice.StopSound();
+                        _audioDevice.PlaySound(@"./Media/SignEnd.wav");
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e.Message);
+                        //_audioDevice.outputDevice = null;
                     }
                 }
                 catch (Exception e)
                 {
                     _logger.LogError(e.Message);
-                }
-                try
-                {
-                    _audioDevice.StopSound();
-                    _audioDevice.PlaySound(@"./Media/SignEnd.wav");
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    //_audioDevice.outputDevice = null;
                 }
                     /////
                 }
@@ -386,6 +384,11 @@ namespace CD1HW.Controllers
                         _logger.LogInformation("sign completed ");
                         fingerprintThread.Interrupt();
                         _ocrCamera.finger_img = null;
+                        Bitmap compImage = Properties.Resources.sign_end;
+                        _wacomSTU.SetPadImage(compImage);
+                        Thread.Sleep(2000);
+                        Bitmap initImage = Properties.Resources.sign_start;
+                        _wacomSTU.SetPadImage(initImage);
                     }
                     else if (_wacomSTU.completeFlag == 2)
                     {
@@ -410,8 +413,25 @@ namespace CD1HW.Controllers
                         _logger.LogInformation("finger scaned");
                         _ocrCamera.finger_img = Convert.ToBase64String(fingerScanImg);
                         _ocrCamera.sign_img = null;
+                        try
+                        {
+                            _audioDevice.StopSound();
+                            _audioDevice.PlaySound(@"./Media/SignEnd.wav");
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e.Message);
+                            //_audioDevice.outputDevice = null;
+                        }
+                        Bitmap compImage = Properties.Resources.sign_end;
+                        _wacomSTU.SetPadImage(compImage);
+                        Thread.Sleep(2000);
+                        Bitmap initImage = Properties.Resources.sign_start;
+                        _wacomSTU.SetPadImage(initImage);
                     }
-                    _wacomSTU.SetPadImage(Properties.Resources.sign_start);
+                    
+                    
+                    
                 }
                 catch (Exception e)
                 {

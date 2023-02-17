@@ -400,15 +400,6 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Office.Interop.Excel/15.0.4795.1001": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/Microsoft.Office.Interop.Excel.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Office.Interop.Excel.dll": {}
-        }
-      },
       "Microsoft.OpenApi/1.2.3": {
         "type": "package",
         "compile": {
@@ -488,6 +479,15 @@
             "assetType": "runtime",
             "rid": "win"
           }
+        }
+      },
+      "MiniExcel/1.30.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/MiniExcel.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MiniExcel.dll": {}
         }
       },
       "NAudio/2.1.0": {
@@ -3260,19 +3260,6 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Office.Interop.Excel/15.0.4795.1001": {
-      "sha512": "cuvqi/U5MYSM0gvR2l90q0m/urRgmg69EiwP5VWp1RcaJ0YT5G26Va5LaOZ3KJFc22FNihS5CUjeePUp2YpGQA==",
-      "type": "package",
-      "path": "microsoft.office.interop.excel/15.0.4795.1001",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net20/Microsoft.Office.Interop.Excel.dll",
-        "lib/netstandard2.0/Microsoft.Office.Interop.Excel.dll",
-        "microsoft.office.interop.excel.15.0.4795.1001.nupkg.sha512",
-        "microsoft.office.interop.excel.nuspec"
-      ]
-    },
     "Microsoft.OpenApi/1.2.3": {
       "sha512": "Nug3rO+7Kl5/SBAadzSMAVgqDlfGjJZ0GenQrLywJ84XGKO0uRqkunz5Wyl0SDwcR71bAATXvSdbdzPrYRYKGw==",
       "type": "package",
@@ -3413,6 +3400,20 @@
         "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.xml",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "MiniExcel/1.30.1": {
+      "sha512": "CcgY399Wyyj2266ylvTsVUXCdg+UNjChH8PjHbCvQuT0BxyXPEc+UY/+WXkhUYVY0xmF/JbgCgXWdjMkhgaucA==",
+      "type": "package",
+      "path": "miniexcel/1.30.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net45/MiniExcel.dll",
+        "lib/netstandard2.0/MiniExcel.dll",
+        "miniexcel.1.30.1.nupkg.sha512",
+        "miniexcel.nuspec"
       ]
     },
     "NAudio/2.1.0": {
@@ -7628,7 +7629,7 @@
       "Grpc.AspNetCore >= 2.51.0",
       "Grpc.Net.Client >= 2.51.0",
       "Grpc.Tools >= 2.51.0",
-      "Microsoft.Office.Interop.Excel >= 15.0.4795.1001",
+      "MiniExcel >= 1.30.1",
       "NAudio >= 2.1.0",
       "OpenCvSharp4 >= 4.7.0.20230115",
       "OpenCvSharp4.Extensions >= 4.7.0.20230115",
@@ -7711,9 +7712,9 @@
             "target": "Package",
             "version": "[2.51.0, )"
           },
-          "Microsoft.Office.Interop.Excel": {
+          "MiniExcel": {
             "target": "Package",
-            "version": "[15.0.4795.1001, )"
+            "version": "[1.30.1, )"
           },
           "NAudio": {
             "target": "Package",

@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
+using System.Globalization;
+using SharpDX.Text;
+using MiniExcelLibs;
+using CsvHelper;
+using CsvHelper.Configuration.Attributes;
 
 namespace CD1HW
 {
@@ -9,61 +12,106 @@ namespace CD1HW
     {
         private readonly AppSettings? _options;
         private readonly ILogger<NecDemoExcel> _logger;
-        private Dictionary<string, string> _necDemoAddr;
+        private List<Person> _necDemoAddr;
         public NecDemoExcel(ILogger<NecDemoExcel> logger, IOptions<AppSettings> options)
         {
             _logger = logger;
             _options = options.Value;
-            _necDemoAddr = new Dictionary<string, string>();
+            _necDemoAddr = new List<Person>();
         }
-        private void ReleaseExcelObject(object obj)
+
+        public void ReadDoc()
         {
-            try
+            string NecDemoFilePath = _options.NecDemoFilePath;
+            string NecDemoFileType = _options.NecDemoFileType;
+            if (NecDemoFileType.Equals("csv"))
             {
-                if (obj != null)
+                _logger.LogInformation("read csv 4 nec start.... : " + _options.NecDemoFilePath);
+
+                try
                 {
-                    Marshal.ReleaseComObject(obj);
-                    obj = null;
+                    using (StreamReader sr = new StreamReader(NecDemoFilePath))
+                    using (CsvReader csv = new CsvReader(sr, CultureInfo.InvariantCulture))
+                    {
+                        _necDemoAddr = csv.GetRecords<Person>().ToList();
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("read nec demo file error! with " + e.Message);
+                }
+                finally
+                {
+
                 }
             }
-            catch (Exception ex)
+            else
             {
-                obj = null;
+                _logger.LogInformation("read Excel 4 nec start.... : " + _options.NecDemoFilePath);
+
+                try
+                {
+                    using (FileStream stream = File.Open(NecDemoFilePath, FileMode.Open, FileAccess.Read))
+                    {
+
+                        var rows = stream.Query();
+                        foreach (var row in rows)
+                        {
+                            Person person = new Person();
+                            person.Name = row.A;
+                            person.Address = row.C;
+                            person.Regnum = row.B;
+                            _necDemoAddr.Add(person);
+                        }
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("read nec demo file error! with " + e.Message);
+                }
+                finally
+                {
+
+                }
             }
-            finally
-            {
-                GC.Collect();
-            }
+            
         }
 
-        public void ReadExcel()
+        public string GetAddr(string name)
         {
-            string NecDemoExcelPath = _options.NecDemoFilePath;
+            foreach (Person person in _necDemoAddr)
+            {
+                if (person.Name.Equals(name))
+                {
+                    return person.Address;
+                }
+            }
+            return "";
+        }
 
-            Microsoft.Office.Interop.Excel.Application application = null;
-            Workbook workbook = null;
-            _Worksheet worksheet = null;
-            try
+        public List<Person> GetAddr(string name, string regnum, string birth)
+        {
+            List<Person> people = new List<Person>();
+            foreach (Person person in _necDemoAddr)
             {
+                if (person.Name.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(name.Replace("-", "").Replace(".", "").Replace(" ", ""))
+                    && (person.Regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(regnum) || person.Regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(birth)))
+                {
+                    people.Add(person);
+                }
+            }
+            return people;
+        }
 
-                application = new Microsoft.Office.Interop.Excel.Application();
-                application.Visible = true;
-                workbook = application.Workbooks.Open(NecDemoExcelPath);
-                worksheet = (_Worksheet)workbook.Sheets[1];
-                Console.WriteLine(worksheet.Name);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("read excel error! with " + e.Message);
-            }
-            finally
-            {
-                workbook.Close();
-                application.Quit();
-                ReleaseExcelObject(worksheet);
-                ReleaseExcelObject(workbook);
-                ReleaseExcelObject(application);
-            }
+        public class Person
+        {
+            [Index(0)]
+            public string Name { get; set; }
+            [Index(1)]
+            public string Regnum { get; set; }
+            [Index(2)]
+            public string Address { get; set; }
         }
     }
 }

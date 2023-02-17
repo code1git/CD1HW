@@ -33,6 +33,7 @@ namespace CD1HW
                     default:
                         CameraBackEnd = VideoCaptureAPIs.DSHOW; break;
                 }
+                SignPadFont = _options.SignPadFont;
             }
             catch (Exception)
             {
@@ -42,6 +43,7 @@ namespace CD1HW
         }
         public string ProductType { get; set; }
         public bool DemoUIOnStart { get; set; }
+        public string NecDemoFileType { get; set; }
         public int CamIdx { get; set; }
         public VideoCaptureAPIs CameraBackEnd { get; set; } = VideoCaptureAPIs.DSHOW;
         public string imgBase64Str { get; set; }
@@ -49,6 +51,7 @@ namespace CD1HW
         public bool camera_crop = true;
         public int camera_rotate = 180;
         public int manual_flag { get; set; } = 0;
+        public string SignPadFont { get; set; } = "굴림체";
 
         //ocr 결과
         public string id_card_type { get; set; }

@@ -157,7 +157,7 @@ namespace Code1HWSvr
                     else
                     {
                         // 이름 글자수에 따라 그리는 위치 변경
-                        if (name.Length > 4)
+                        /*if (name.Length > 4)
                         {
                             SizeF nameGpSize = graphics.MeasureString(name, font, new PointF(0, 0), StringFormat.GenericTypographic);
                             fontSize = fontSize -= 5f;
@@ -175,7 +175,13 @@ namespace Code1HWSvr
                         else
                         {
                             pointOrigin = new Point(30, 150);
-                        }
+                        }*/
+
+                        SizeF nameGpSize = graphics.MeasureString(name, font, new PointF(0, 0), StringFormat.GenericTypographic);
+                        fontSize = fontSize -= 5f;
+                        font = new System.Drawing.Font("돋움체", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+                        pointOrigin = new Point((800 - (int)nameGpSize.Width) / 2, (480 - (int)nameGpSize.Height) / 2);
+
                         SizeF tsize = graphics.MeasureString(name, font, new PointF(0, 0), StringFormat.GenericTypographic);
                     }
                     graphicsPath.AddString(name, font.FontFamily, (int)FontStyle.Bold, fontSize, pointOrigin, StringFormat.GenericTypographic);
