@@ -34,6 +34,7 @@ namespace CD1HW
                         CameraBackEnd = VideoCaptureAPIs.DSHOW; break;
                 }
                 SignPadFont = _options.SignPadFont;
+                ResultPath = _options.ResultPath;
             }
             catch (Exception)
             {
@@ -52,6 +53,7 @@ namespace CD1HW
         public int camera_rotate = 180;
         public int manual_flag { get; set; } = 0;
         public string SignPadFont { get; set; } = "굴림체";
+        public string ResultPath { get; set; }
 
         //ocr 결과
         public string id_card_type { get; set; }
@@ -75,6 +77,97 @@ namespace CD1HW
         public string sign_img { get; set; }
         public string finger_img { get; set; }
 
+        public void SaveResult()
+        {
+            try
+            {
+                string resultTxt =  ResultPath + @"\.ocr_result.csv";
+                string regnumIdx;
+                if (regnum != null && !regnum.Equals(""))
+                    regnumIdx = regnum;
+                else if (birth != null && !birth.Equals(""))
+                    regnumIdx = birth;
+                else
+                    regnumIdx = "none";
+                string maskingImgFilePath = ResultPath + "/" +name + "_" + regnumIdx + "_masking.jpg";
+                using (StreamWriter sw = new StreamWriter(resultTxt, true))
+                {
+                    string tmpSex = "";
+                    if (sex.Equals("1"))
+                        tmpSex = "남";
+                    else if (sex.Equals("2"))
+                        tmpSex = "여";
+                    sw.WriteLine(System.DateTime.Now+ "," + name+ "," + regnumIdx + "," + tmpSex + "," + maskingImgFilePath);
+                }
+                if (masking_img != null)
+                {
+
+                    using (FileStream fs = new FileStream(maskingImgFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        byte[] bData = Convert.FromBase64String(masking_img);
+                        fs.Write(bData);
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("there is no masking image");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+        }
+
+        public void SaveSignImg(string padName, string padBirth)
+        {
+            try
+            {
+                string signImgFilePath = ResultPath + "/" + padName + "_" + padBirth + "_sign.jpg";
+                if (sign_img!=null)
+                {
+                    using (FileStream fs = new FileStream(signImgFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        byte[] bData = Convert.FromBase64String(sign_img);
+                        fs.Write(bData);
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("there is no sign image");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+
+        }
+
+        public void SaveFingerImg(string padName, string padBirth)
+        {
+            try
+            {
+                string fingerImgFilePath = ResultPath + "/" + padName + "_" + padBirth + "_finger.bmp";
+                if (finger_img != null)
+                {
+                    using (FileStream fs = new FileStream(fingerImgFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        byte[] bData = Convert.FromBase64String(finger_img);
+                        fs.Write(bData);
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("there is no finger image");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+
+        }
 
     }
 }

@@ -23,7 +23,7 @@ namespace CD1HW.Hardware
          * 1 : completed
          * 2 : cansoled
          */
-        public int completeFlag = 0;
+        public int completeFlag = -1;
 
         enum PenDataOptionMode
         {
@@ -135,9 +135,6 @@ namespace CD1HW.Hardware
             setPenDataOptionMode(currentPenDataOptionMode);
 
             _ocrCamera.sign_img = null;
-
-            Bitmap initImage = Properties.Resources.sign_start;
-            SetPadImage(initImage);
 
             completeFlag = 2;
 
@@ -337,6 +334,7 @@ namespace CD1HW.Hardware
 
         public void SetSignPad(string name, string birth, string addr)
         {
+            completeFlag = 0;
             ResetPadImage();
 
             Bitmap bitmap = new Bitmap(800, 480);

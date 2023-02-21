@@ -117,6 +117,7 @@ namespace CD1HW.Hardware
             if (inputDeviceIdx == -1)
             {
                 //_logger.LogInformation("Audio Input Device Not Found");
+
             }
             else
             {
@@ -139,10 +140,12 @@ namespace CD1HW.Hardware
             if (outputDevice == null)
             {
                 //_logger.LogInformation("Audio output Device Not Found");
+                Console.WriteLine("sonund deivice not found");
             }
             else
             {
                 //_logger.LogInformation("Audio out : " + outputDevice.DeviceFriendlyName);
+                Console.WriteLine(outputDevice.FriendlyName);
             }
             enumerator.Dispose();
         }

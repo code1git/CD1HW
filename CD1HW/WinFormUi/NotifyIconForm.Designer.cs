@@ -33,9 +33,9 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.selectCameraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sel_cam_0 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sel_cam_1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sel_cam_2 = new System.Windows.Forms.ToolStripMenuItem();
             this.dSSHOWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mSMFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,35 +61,35 @@
             // selectCameraToolStripMenuItem
             // 
             this.selectCameraToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
+            this.sel_cam_0,
+            this.sel_cam_1,
+            this.sel_cam_2,
             this.dSSHOWToolStripMenuItem,
             this.mSMFToolStripMenuItem});
             this.selectCameraToolStripMenuItem.Name = "selectCameraToolStripMenuItem";
             this.selectCameraToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.selectCameraToolStripMenuItem.Text = "select camera";
             // 
-            // toolStripMenuItem2
+            // sel_cam_0
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = "0";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.sel_cam_0.Name = "sel_cam_0";
+            this.sel_cam_0.Size = new System.Drawing.Size(180, 22);
+            this.sel_cam_0.Text = "0";
+            this.sel_cam_0.Click += new System.EventHandler(this.sel_cam_0_ToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem3
+            // sel_cam_1
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "1";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            this.sel_cam_1.Name = "sel_cam_1";
+            this.sel_cam_1.Size = new System.Drawing.Size(180, 22);
+            this.sel_cam_1.Text = "1";
+            this.sel_cam_1.Click += new System.EventHandler(this.sel_cam_1_ToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem4
+            // sel_cam_2
             // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem4.Text = "2";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            this.sel_cam_2.Name = "sel_cam_2";
+            this.sel_cam_2.Size = new System.Drawing.Size(180, 22);
+            this.sel_cam_2.Text = "2";
+            this.sel_cam_2.Click += new System.EventHandler(this.sel_cam_2_ToolStripMenuItem_Click);
             // 
             // dSSHOWToolStripMenuItem
             // 
@@ -134,9 +134,9 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem selectCameraToolStripMenuItem;
-        private ToolStripMenuItem toolStripMenuItem2;
-        private ToolStripMenuItem toolStripMenuItem3;
-        private ToolStripMenuItem toolStripMenuItem4;
+        private ToolStripMenuItem sel_cam_0;
+        private ToolStripMenuItem sel_cam_1;
+        private ToolStripMenuItem sel_cam_2;
         private ToolStripMenuItem dSSHOWToolStripMenuItem;
         private ToolStripMenuItem mSMFToolStripMenuItem;
     }

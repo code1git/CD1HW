@@ -37,9 +37,9 @@ namespace CD1HW
                 audioDevice.PlaySound(@"./Media/DiviceInit.wav");
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Console.WriteLine(e.StackTrace);
             }
 
             Application.EnableVisualStyles();

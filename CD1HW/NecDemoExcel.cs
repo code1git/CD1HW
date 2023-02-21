@@ -92,13 +92,45 @@ namespace CD1HW
 
         public List<Person> GetAddr(string name, string regnum, string birth)
         {
+            name = name.Replace("-", "").Replace(".", "").Replace(" ", "").Replace("(", "").Replace(")", "");
+            regnum = regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Replace("(", "").Replace(")", "");
+            birth = birth.Replace("-", "").Replace(".", "").Replace(" ", "").Replace("(", "").Replace(")", "");
+            string birthTmp8 = birth;
+            if (birth.Length == 8)
+            {
+                birth = birth.Substring(2, 6);
+            }
+
             List<Person> people = new List<Person>();
             foreach (Person person in _necDemoAddr)
             {
-                if (person.Name.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(name.Replace("-", "").Replace(".", "").Replace(" ", ""))
-                    && (person.Regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(regnum) || person.Regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Equals(birth)))
+                string personName = person.Name.Replace("-", "").Replace(".", "").Replace(" ", "").Replace("(", "").Replace(")", "");
+                string personRegnum = person.Regnum.Replace("-", "").Replace(".", "").Replace(" ", "").Replace("(", "").Replace(")", "");
+
+                if (personName.Equals(name) )
                 {
-                    people.Add(person);
+                    if(regnum!=null && !regnum.Equals(""))
+                    {
+                        if (regnum.Equals(personRegnum))
+                        {
+                            people.Add(person);
+                        }
+                    }
+                    else
+                    {
+                        if (birthTmp8.Equals(personRegnum))
+                        {
+                            people.Add(person);
+                        }
+                        if (personRegnum.Length> 6)
+                        {
+                            personRegnum = personRegnum.Substring(0, 6);
+                        }
+                        if(birth.Equals(personRegnum) )
+                        {
+                            people.Add(person);
+                        }
+                    }
                 }
             }
             return people;

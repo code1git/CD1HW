@@ -116,14 +116,10 @@ namespace CD1HW.Controllers
         [HttpPost("/query_addr_4_nec")]
         public List<NecDemoExcel.Person> NecAddr(CD1HW.Model.OcrResult ocrResult)
         {
-            string name = ocrResult.name.Replace("-", "").Replace(".", "").Replace(" ", "");
-            string regnum = ocrResult.regnum.Replace("-", "").Replace(".", "").Replace(" ","");
-            string birth = ocrResult.birth.Replace("-", "").Replace(".", "").Replace(" ", "");
-            if(birth.Length == 8)
-            {
-                birth = birth.Substring(2, 6);
-            }
-            Console.WriteLine(birth);
+            string name = ocrResult.name;
+            string regnum = ocrResult.regnum;
+            string birth = ocrResult.birth;
+            
             List<NecDemoExcel.Person> people = _necExcel.GetAddr(name, regnum, birth);
             
             return people;
@@ -139,7 +135,8 @@ namespace CD1HW.Controllers
             {
                 _ocrCamera.name = ocrResult.name;
                 _ocrCamera.regnum = ocrResult.regnum;
-                _ocrCamera.addr = ocrResult.addr;
+                // 선관위 (addr x)
+                //_ocrCamera.addr = ocrResult.addr;
                 _ocrCamera.birth = ocrResult.birth;
                 _ocrCamera.sex = ocrResult.sex;
                 _ocrCamera.id_card_type = ocrResult.id_card_type;
@@ -164,11 +161,6 @@ namespace CD1HW.Controllers
                     {
                     }
                 }
-                // 선관위 전용
-                if (_ocrCamera.ProductType.Equals("NEC"))
-                {
-                    _ocrCamera.addr = _necExcel.GetAddr(ocrResult.name);
-                }
 
             }
 
@@ -181,6 +173,7 @@ namespace CD1HW.Controllers
                 _ocrCamera.masking_img = resultImg.masking_img;
 
             }
+            _ocrCamera.SaveResult();
             return "ocr reset";
         }
 
@@ -209,7 +202,7 @@ namespace CD1HW.Controllers
             }
             return _ocrCamera.finger_img;
         }
-        [HttpPost("/call_padandfinger_old")]
+        /*[HttpPost("/call_padandfinger_old")]
         public string callPad(OcrResult ocrMsg)
         {   
             _logger.LogInformation("call finger print scanner and sing pad by web");
@@ -292,6 +285,7 @@ namespace CD1HW.Controllers
                         _logger.LogInformation("finger scaned");
                         _ocrCamera.finger_img = Convert.ToBase64String(fingerScanImg);
                     }
+                    
                     try
                     {
                         _audioDevice.StopSound();
@@ -316,11 +310,20 @@ namespace CD1HW.Controllers
                 _logger.LogError(e.Message);
             }
             return "singpad / fingerprint scanner";
-        }
+        }*/
 
         [HttpPost("/call_padandfinger")]
         public string CallSignnFinger(OcrResult ocrMsg)
         {
+            if(ocrMsg.name == null || ocrMsg.name.Equals(""))
+            {
+                if((ocrMsg.regnum == null || ocrMsg.regnum.Equals(""))&&(ocrMsg.birth == null || ocrMsg.birth.Equals("")))
+                {
+                    return "no p data";
+                }
+            }
+
+
             _logger.LogInformation("call finger print scanner and sing pad by web");
             _ocrCamera.finger_img = null;
             byte[] fingerScanImg = null;
@@ -339,7 +342,6 @@ namespace CD1HW.Controllers
 
                 try
                 {
-                    _wacomSTU.completeFlag = 0;
                     _wacomSTU.SetSignPad(ocrMsg.name, ocrMsg.birth, ocrMsg.addr);
                 }
                 catch (Exception)
@@ -371,6 +373,12 @@ namespace CD1HW.Controllers
                     // sign pad completed
                     if (_wacomSTU.completeFlag == 1)
                     {
+                        _logger.LogInformation("sign completed ");
+                        fingerprintThread.Interrupt();
+                        _ocrCamera.finger_img = null;
+                        Bitmap compImage = Properties.Resources.sign_end;
+                        _wacomSTU.SetPadImage(compImage);
+                        _ocrCamera.SaveSignImg(ocrMsg.name, ocrMsg.birth);
                         try
                         {
                             _audioDevice.StopSound();
@@ -381,17 +389,17 @@ namespace CD1HW.Controllers
                             _logger.LogError(e.Message);
                             //_audioDevice.outputDevice = null;
                         }
-                        _logger.LogInformation("sign completed ");
-                        fingerprintThread.Interrupt();
-                        _ocrCamera.finger_img = null;
-                        Bitmap compImage = Properties.Resources.sign_end;
-                        _wacomSTU.SetPadImage(compImage);
-                        Thread.Sleep(2000);
                         Bitmap initImage = Properties.Resources.sign_start;
                         _wacomSTU.SetPadImage(initImage);
                     }
                     else if (_wacomSTU.completeFlag == 2)
                     {
+                        Bitmap initImage = Properties.Resources.sign_start;
+                        _wacomSTU.SetPadImage(initImage);
+                        _logger.LogInformation("sign canceled");
+                        fingerprintThread.Interrupt();
+                        _ocrCamera.finger_img = null;
+                        _ocrCamera.sign_img = null;
                         try
                         {
                             _audioDevice.StopSound();
@@ -402,17 +410,18 @@ namespace CD1HW.Controllers
                             _logger.LogError(e.Message);
                             //_audioDevice.outputDevice = null;
                         }
-                        _logger.LogInformation("sign canceled");
-                        fingerprintThread.Interrupt();
-                        _ocrCamera.finger_img = null;
-                        _ocrCamera.sign_img = null;
+                        return "1";
                     }
                     // 지문이미지 처리
                     else if (fingerScanImg != null)
                     {
+                        _wacomSTU.completeFlag = 1;
                         _logger.LogInformation("finger scaned");
                         _ocrCamera.finger_img = Convert.ToBase64String(fingerScanImg);
                         _ocrCamera.sign_img = null;
+                        Bitmap compImage = Properties.Resources.sign_end;
+                        _wacomSTU.SetPadImage(compImage);
+                        _ocrCamera.SaveFingerImg(ocrMsg.name, ocrMsg.birth);
                         try
                         {
                             _audioDevice.StopSound();
@@ -423,9 +432,6 @@ namespace CD1HW.Controllers
                             _logger.LogError(e.Message);
                             //_audioDevice.outputDevice = null;
                         }
-                        Bitmap compImage = Properties.Resources.sign_end;
-                        _wacomSTU.SetPadImage(compImage);
-                        Thread.Sleep(2000);
                         Bitmap initImage = Properties.Resources.sign_start;
                         _wacomSTU.SetPadImage(initImage);
                     }
@@ -440,14 +446,22 @@ namespace CD1HW.Controllers
 
             }
 
-            return "singpad / fingerprint scanner";
+            return "0";
         }
 
 
         [HttpGet("/cancel_padandfinger")]
         public string CancelSignnFinger()
         {
-            _wacomSTU.completeFlag = 2;
+            if (_wacomSTU.completeFlag == 0)
+            {
+                _wacomSTU.completeFlag = 2;
+                return "0";
+            }
+            else
+            {
+                return "1";
+            }
             return "cancel singpad / fingerprint scanner";
         }
     }

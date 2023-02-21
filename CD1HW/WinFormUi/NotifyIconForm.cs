@@ -29,6 +29,21 @@ namespace CD1HW.WinFormUi
                 demoUI = new DemoUI(ocrCamera);
                 demoUI.Show();
             }
+
+            switch (_ocrCamera.CamIdx)
+            {
+                case 0:
+                    sel_cam_0.Checked = true;
+                    break;
+                case 1:
+                    sel_cam_1.Checked = true;
+                    break;
+                case 2:
+                    sel_cam_2.Checked = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -48,31 +63,40 @@ namespace CD1HW.WinFormUi
             }
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        private void sel_cam_0_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _ocrCamera.CamIdx = 0;
-            lock(_cv2Camera)
+            lock (_cv2Camera)
             {
                 _cv2Camera.ResetCamera();
             }
+            sel_cam_0.Checked = true;
+            sel_cam_1.Checked = false;
+            sel_cam_2.Checked = false;
         }
 
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        private void sel_cam_1_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _ocrCamera.CamIdx = 1;
             lock (_cv2Camera)
             {
                 _cv2Camera.ResetCamera();
             }
+            sel_cam_0.Checked = false;
+            sel_cam_1.Checked = true;
+            sel_cam_2.Checked = false;
         }
 
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        private void sel_cam_2_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _ocrCamera.CamIdx = 2;
             lock (_cv2Camera)
             {
                 _cv2Camera.ResetCamera();
             }
+            sel_cam_0.Checked = false;
+            sel_cam_1.Checked = false;
+            sel_cam_2.Checked = true;
         }
 
         private void dSSHOWToolStripMenuItem_Click(object sender, EventArgs e)

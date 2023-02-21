@@ -10,6 +10,7 @@
         public string NecDemoFileType { get; set; }
         public string ProductType { get; set; }
         public string SignPadFont { get; set; }
+        public string ResultPath { get; set; }
     }
 }
 
