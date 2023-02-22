@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<style type="text/css">
+    html,
+    body,
+    #main_container {
+        margin: 0;
+        height: 100%;
+    }
+
+    #id_imgs {
+        height: 45%;
+        overflow: hidden;
+    }
+</style>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>demo</title>
+</head>
+
+<body>
+    <div
+        id="main_container"
+        class="container-fluid"
+        style="display: flex; flex-flow: row"
+    >
+        <div
+            id="left_container"
+            style="display: flex; flex-flow: column"
+            class="col-md-7"
+        >
+            <div id="search_box">
+                <table class="table table-striped">
+                    <tr>
+                        <th colspan="6">선거인정보</th>
+                        <th>
+                            <button
+                                id="search_btn"
+                                class="btn btn-primary"
+                                onclick="query_addr_4_nec()"
+                            >
+                                조회
+                            </button>
+                        </th>
+                        <th>
+                            <button
+                                id="reset_btn"
+                                class="btn btn-primary"
+                                onClick="ocr_reset()"
+                            >
+                                초기화
+                            </button>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>성명</td>
+                        <td colspan="3">
+                            <input id="name" class="col-md-12" />
+                        </td>
+                        <td>생년월일</td>
+                        <td colspan="3">
+                            <input id="birth" class="col-md-12" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>주민등록번호</td>
+                        <td colspan="3">
+                            <input id="regnum" class="col-md-12" />
+                        </td>
+                        <td>성별</td>
+                        <td colspan="3">
+                            <input type="radio" id="sex_m" />
+                            <label>남</label>
+                            <input type="radio" id="sex_f" />
+                            <label>여</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>주소</td>
+                        <td colspan="7">
+                            <input id="addr" value="" class="col-md-12" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div style="display: flex; flex-flow: row">
+                <div id="confirm_info" class="col-md-8">
+                    <table class="table table-striped">
+                        <tr>
+                            <th colspan="2">본인확인자료입력</th>
+                            <th></th>
+                            <th>
+                                <button
+                                    id="query_btn"
+                                    class="btn btn-primary"
+                                    onClick="call_scanner()"
+                                >
+                                    지문/서명 입력요청
+                                </button>
+                                <button
+                                    id="query_btn"
+                                    class="btn btn-secondary"
+                                    onClick="cancel_scanner()"
+                                >
+                                    취소
+                                </button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div style="display: flex; flex-flow: row">
+                                    <div class="col-md-4.5">
+                                        <p>손도장</p>
+                                        <img
+                                            id="finger_img"
+                                            src="./img/temp/finger_temp.jpg"
+                                            class="img-fluid"
+                                        />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p>서명</p>
+                                        <img
+                                            id="sign_img"
+                                            src="./img/temp/sign_temp.jpg"
+                                            class="img-fluid"
+                                        />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="print" class="col-md-4">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>이미지 보기</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#maskingModal"
+                                >
+                                    마스킹 이미지 보기
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#fingerModal"
+                                >
+                                    지문 이미지 보기
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#signModal"
+                                >
+                                    서명 이미지 보기
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>수동 촬영</th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    onclick="manual_scan()"
+                                >
+                                    수동촬영
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><p id="manual_time"></p></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id="right_container"
+            style="display: flex; flex-flow: column"
+            class="col-md-5"
+        >
+            <div id="id_imgs">
+                <table class="table table-striped">
+                    <tr>
+                        <th>신분증 인식정보</th>
+                    </tr>
+                </table>
+                <div class="col-md-12" style="display: flex; flex-flow: row">
+                    <div class="col-md-6 h-25">
+                        <div>
+                            <p>성명</p>
+                            <img
+                                id="name_img"
+                                src="./img/temp/name_temp.jpg"
+                                class="img-fluid"
+                            />
+                        </div>
+                        <div>
+                            <p>주민등록번호</p>
+                            <img
+                                id="regnum_img"
+                                src="./img/temp/regnum_temp.jpg"
+                                class="img-fluid"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <p>사진</p>
+                        <img
+                            id="face_img"
+                            src="./img/temp/face_temp.jpg"
+                            class="img-fluid"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped">
+                <tr>
+                    <td class="bg-info" colspan="3" rowspan="1">
+                        <img
+                            class="col-md-12"
+                            id="card_scanner_view"
+                            src="./img/temp/camera_temp.jpg"
+                        />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!--modal 1-->
+    <div
+        class="modal fade"
+        id="maskingModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Masking Image</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>마스킹</p>
+                    <img
+                        id="masking_img_modal"
+                        src="./img/temp/sign_temp.jpg"
+                        class="img-fluid"
+                    />
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--modal 2-->
+    <div
+        class="modal fade"
+        id="fingerModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Finger Print Image</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>손도장</p>
+                    <img
+                        id="finger_img_modal"
+                        src="./img/temp/finger_temp.jpg"
+                        class="img-fluid"
+                    />
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--modal 3-->
+    <div
+        class="modal fade"
+        id="signModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign Image</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>서명</p>
+                    <img
+                        id="sign_img_modal"
+                        src="./img/temp/sign_temp.jpg"
+                        class="img-fluid"
+                    />
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--modal 4-->
+    <div
+        class="modal fade"
+        id="selAddrModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+    >
+        <div
+            class="modal-dialog modal-xl modal-dialog-centered"
+            role="document"
+        >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">선택</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>주소지 선택</p>
+                    <table class="table table-striped" id="addrTable">
+                        <tbody id="addrTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal 5-->
+    <div
+        class="modal fade"
+        id="addrNotFoundModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">경고</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>주소지를 찾을 수 없습니다</p>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<link rel="stylesheet" href="./css/bootstrap.min.css" />
+
+<script src="./js/sdk/jquery-3.6.0.min.js"></script>
+<script src="./js/sdk/popper.js"></script>
+<script src="./js/sdk/bootstrap.min.js"></script>
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script> -->
+<script src="./js/demo.js?ver=5"></script>

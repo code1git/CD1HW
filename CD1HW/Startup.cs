@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CD1HW
 {
+    // web server 기동을 위한 설정
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -22,6 +23,7 @@ namespace CD1HW
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // 프로그램에 사용될 object를 선언
             services.Configure<AppSettings>(Configuration.GetSection(AppSettings.Settings));
             services.AddOptions();
             services.AddControllers();
@@ -55,8 +57,9 @@ namespace CD1HW
 
 
             //app.UseHttpsRedirection();
-
             //app.UseAuthorization();
+
+            // web socket server 선언 (js ui들을 사용할수 있도록)
             var webSocketOptions = new WebSocketOptions
             {
                 KeepAliveInterval = TimeSpan.FromMinutes(2)
@@ -67,6 +70,8 @@ namespace CD1HW
             app.UseCors();
 
             app.UseRouting();
+
+            // endpoint에 grpc선언 -> grpc를 통해 ocr engine과 통신
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<CamerabufService>();
@@ -74,6 +79,7 @@ namespace CD1HW
                 endpoints.MapControllers();
             });
 
+            // file logger선언
             var _path = Directory.GetCurrentDirectory();
             loggerFactory.AddFile($"{_path}\\logs\\log.txt");
         }

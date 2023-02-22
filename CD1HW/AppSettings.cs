@@ -1,5 +1,6 @@
 ﻿namespace CD1HW
 {
+    // Appsettiongs.json을 통해 읽는 초기 config
     public class AppSettings
     {
         public const string Settings = "AppSettings";

@@ -12,7 +12,11 @@ using OpenCvSharp.Extensions;
 
 namespace WebSocketsSample.Controllers;
 
-// <snippet>
+/* websoket controller
+ * websoket를 통해 현재의 status를 매 요청동안 전송
+ * client side에서 요청을 받으면 현재의 camera frame과 보관하고있는 ocr정보등을 전송
+ * client에서는 받은 데이터로부터 원하는 정보는 parsing하여 사용
+ */
 public class WebSocketController : ControllerBase
 {
     private readonly ILogger<WebSocketController> _logger;

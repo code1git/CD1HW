@@ -7,10 +7,12 @@ using Windows.ApplicationModel.Store;
 
 namespace CD1HW
 {
+    /* 각종 global 변수의 저장에 사용
+     * 유지/보수의 편의상 camera/image에 관한 변수 만이 아닌 프로그램내 전반에 사용되는 변수들을 몰아서 저장중
+     * 추후 유지/보수의 편의상의 의미가 적어지거나 성능상의 issue를 보일정도로 커진다면 분리하는것이 좋을 것으로 보임
+     */
     public class OcrCamera
     {
-
-        // get opction from appsettings.json
         private readonly AppSettings? _options;
         private readonly ILogger<OcrCamera> _logger;
         public OcrCamera(ILogger<OcrCamera> logger, IOptions<AppSettings> options)
@@ -18,6 +20,7 @@ namespace CD1HW
             _logger = logger;
             try
             {
+                // get opctions from appsettings.json
                 _options = options.Value;
                 ProductType = _options.ProductType;
                 DemoUIOnStart = _options.DemoUIOnStart;
@@ -42,17 +45,31 @@ namespace CD1HW
             }
             
         }
+        // application.json으로 부터 읽은 초기세팅
+        // 제품의 타입 (추후 버전의 분화없이 flag로 분기하기 위해)
         public string ProductType { get; set; }
+        // 실행시 UI실행
         public bool DemoUIOnStart { get; set; }
-        public string NecDemoFileType { get; set; }
+        // camera index
         public int CamIdx { get; set; }
+        // camera capture의 backend (windows :  dshow권장)
         public VideoCaptureAPIs CameraBackEnd { get; set; } = VideoCaptureAPIs.DSHOW;
+        // 현재의 camera image를 base 64 str로 변환한 데이터 (데이터 전송에 사용)
         public string imgBase64Str { get; set; }
+        // 현재의 camera image의 bitmap
         public Bitmap cameraBitmap { get; set; }
         public bool camera_crop = true;
         public int camera_rotate = 180;
+        
+        // 수동촬영, 수동촬영시의 check data
         public int manual_flag { get; set; } = 0;
+        public int manual_time_chk_flag { get; set; } = 0;
+        public long manual_st_time_mill { get; set; }
+        public long manual_ed_time_mill { get; set; }
+        
+        // 서명패드 display의 글씨체 지정
         public string SignPadFont { get; set; } = "굴림체";
+        // 결과 저장되는 임시 folder의 path
         public string ResultPath { get; set; }
 
         //ocr 결과
@@ -77,6 +94,7 @@ namespace CD1HW
         public string sign_img { get; set; }
         public string finger_img { get; set; }
 
+        // 결과 log text file에 append
         public void SaveResult()
         {
             try

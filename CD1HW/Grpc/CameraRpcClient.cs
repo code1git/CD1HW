@@ -5,6 +5,9 @@ using Grpc.Net.Client;
 
 namespace CD1HW.Grpc
 {
+    /* grpc client 예제
+     * grpc를 server side로 작동함으로 사용하지 않으나, 테스트를 위해 작성한 코드
+     */
     public class CameraRpcClient
     {
         private readonly ILogger<CameraRpcClient> _logger;

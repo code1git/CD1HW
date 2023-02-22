@@ -95,9 +95,21 @@ namespace CD1HW.Controllers
         public string ManualScan()
         {
             _logger.LogInformation("call manual scan by web");
-
             _ocrCamera.manual_flag = 1;
-            return "manual_scan";
+            try
+            {
+                while (_ocrCamera.manual_flag == 1 || _ocrCamera.manual_time_chk_flag == 1)
+                {
+                
+                }
+                long ocrTime = _ocrCamera.manual_ed_time_mill - _ocrCamera.manual_st_time_mill;
+                return ocrTime.ToString();
+
+            }
+            catch (Exception)
+            {
+                return "0";
+            }
         }
 
         /*[HttpPost("/query_addr_4_nec")]
@@ -174,6 +186,12 @@ namespace CD1HW.Controllers
 
             }
             _ocrCamera.SaveResult();
+            if(_ocrCamera.manual_time_chk_flag == 1)
+            {
+                _ocrCamera.manual_ed_time_mill = DateTime.Now.Ticks;
+                _ocrCamera.manual_time_chk_flag = 0;
+            }
+            
             return "ocr reset";
         }
 
