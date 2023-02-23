@@ -5,6 +5,9 @@ using Windows.Devices.Usb;
 
 namespace CD1HW.Hardware
 {
+    /// <summary>
+    /// wacom 서명패드 컨트롤 STU sdk 버전
+    /// </summary>
     public class WacomSTU
     {
         private readonly ILogger<WacomSTU> _logger;

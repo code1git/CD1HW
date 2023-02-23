@@ -13,7 +13,14 @@ using SharpDX;
 
 namespace CD1HW.Hardware
 {
-    // 지문스캐너
+
+    /// <summary>
+    /// 디젠트 지문 인식기 코드
+    /// **** 구버전 ****
+    /// 동작은 동일한나 di을 이용하는것이 아닌 인스턴스 선언을 통하여 객체 유지
+    /// 개선판 코드는 IzzixFingerprint.cs 참조
+    /// 참조를 위해 남겨놈
+    /// </summary>
     public sealed class FingerPrintScanner
     {
 

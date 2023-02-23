@@ -5,9 +5,10 @@ using Grpc.Net.Client;
 
 namespace CD1HW.Grpc
 {
-    /* grpc client 예제
-     * grpc를 server side로 작동함으로 사용하지 않으나, 테스트를 위해 작성한 코드
-     */
+    /// <summary>
+    /// grpc client 예제
+    /// grpc를 server side로 작동함으로 사용하지 않으나, 테스트를 위해 작성한 코드
+    /// </summary>
     public class CameraRpcClient
     {
         private readonly ILogger<CameraRpcClient> _logger;
@@ -32,6 +33,9 @@ namespace CD1HW.Grpc
             }
         }
 
+        /// <summary>
+        /// test용 roop 동작
+        /// </summary>
         public void stardRoop()
         {
             Thread roopThread = new Thread(new ThreadStart(sendRpc));

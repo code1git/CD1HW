@@ -14,7 +14,11 @@ using Windows.Networking;
 
 namespace Code1HWSvr
 {
-    // 서명패드 호출 class
+    /// <summary>
+    /// wacom signpad with signature sdk 
+    /// sdk가 추가기능에 필요한 기능을 지원하지 않아 사용 x
+    /// (수동으로 펜의 입력 포인트를 받을 필요가 있었으나 지원하지않음)
+    /// </summary>
     class Signpad
     {
         private static bool ScriptIsRunning;               // flag for UI button respones

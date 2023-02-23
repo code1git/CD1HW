@@ -21,15 +21,18 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
  */
 namespace CD1HW
 {
+
     public class Program
     {
         // DI object 사용을 위해 각 모듈의 object는 Service Provider를 통해 받는다.
         public static IServiceProvider ServiceProvider { get; set; }
-        
-        // 프로그램 메인
-        // web server기동 및 기동시 동작해야하는 다른 thread의 동작 선언
-        // AudioDevice에 사용된 NAudio라이브러리의 디바이스 선택이 STA thread상에서 작동 하지 않음으로 사용 x
+
         //[STAThread]
+        /// <summary>
+        /// web server기동 및 기동시 동작해야하는 다른 thread의 동작 선언
+        /// AudioDevice에 사용된 NAudio라이브러리의 디바이스 선택이 STA thread상에서 작동 하지 않음으로 사용 x
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             // 웹서버 기동, 세부설정은 Startup.cs

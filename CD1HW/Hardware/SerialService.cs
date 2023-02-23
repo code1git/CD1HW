@@ -11,6 +11,10 @@ using System.Windows.Forms;
 
 namespace CD1HW.Hardware
 {
+    /// <summary>
+    /// serial port service
+    /// 바코드 리더기 지원용
+    /// </summary>
     class SerialService
     {
         private readonly ILogger<SerialService> _logger;

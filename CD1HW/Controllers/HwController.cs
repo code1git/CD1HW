@@ -30,32 +30,17 @@ namespace CD1HW.Controllers
         {
             _logger = logger;
             _cv2Camera = cv2Camera;
-            //_cv2Camera = Cv2Camera.Instance;
             _ocrCamera = ocrCamera;
             _necExcel = necExcel;
-            //_audioDevice = AudioDevice.Instance;
             _audioDevice = audioDevice;
             _izzixFingerprint = izzixFingerprint;
             _wacomSTU = wacomSTU;
         }
-        
-        [HttpGet("/nametest")]
-        public string NameTest(string name)
-        {
-            _ocrCamera.name = name;
-            string addr = _necExcel.GetAddr(name);
-            if (addr.Equals(""))
-                addr = "addr not found";
-            _ocrCamera.addr = addr;
-            return addr;
-        }
 
-        [HttpGet("/camera_info")]
-        public string GetCameraBackendName()
-        {
-            return _cv2Camera.GetCameraBackendName();
-        }
-
+        /// <summary>
+        /// 카메라 리셋
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/camera_reset")]
         public string ResetCamera()
         {
@@ -68,6 +53,10 @@ namespace CD1HW.Controllers
             return "camera reset";
         }
 
+        /// <summary>
+        /// 저장된 ocr 결과 리셋
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/ocr_reset")]
         public string OcrReset()
         {
@@ -91,6 +80,10 @@ namespace CD1HW.Controllers
             return "ocr reset";
         }
 
+        /// <summary>
+        /// 수동스캔
+        /// </summary>
+        /// <returns>소요시간 (100nanosec)</returns>
         [HttpGet("/manual_scan")]
         public string ManualScan()
         {
@@ -112,19 +105,11 @@ namespace CD1HW.Controllers
             }
         }
 
-        /*[HttpPost("/query_addr_4_nec")]
-        public string NecAddr(CD1HW.Model.OcrResult ocrResult)
-        {
-            string name = ocrResult.name;
-            string regnum = ocrResult.regnum;
-            _ocrCamera.name = name;
-            string addr = _necCsv.GetAddr(name);
-            if (addr.Equals(""))
-                addr = "명부 데이터가 존재하지 않습니다.";
-            _ocrCamera.addr = addr;
-            return addr;
-        }*/
-
+        /// <summary>
+        /// 선관위 데모용 명부조회
+        /// </summary>
+        /// <param name="ocrResult">성명, 주민번호, 생년월일</param>
+        /// <returns>조건에 맍는 명부내 인물 리스트</returns>
         [HttpPost("/query_addr_4_nec")]
         public List<NecDemoExcel.Person> NecAddr(CD1HW.Model.OcrResult ocrResult)
         {
@@ -195,6 +180,11 @@ namespace CD1HW.Controllers
             return "ocr reset";
         }
 
+        /// <summary>
+        /// 지문인식기 호출 (테스트용)
+        /// </summary>
+        /// <param name="ocrMsg"></param>
+        /// <returns></returns>
         [HttpPost("/call_finger")]
         public string callFinger(OcrResult ocrMsg)
         {
@@ -330,6 +320,12 @@ namespace CD1HW.Controllers
             return "singpad / fingerprint scanner";
         }*/
 
+        /// <summary>
+        /// 지문인식기 + 서명패드 호출
+        /// 둘중하나가 입력완료되면 반대쪽은 종료
+        /// </summary>
+        /// <param name="ocrMsg">서명패드에 표시될 정보. 이름, 생년월일, 주소</param>
+        /// <returns></returns>
         [HttpPost("/call_padandfinger")]
         public string CallSignnFinger(OcrResult ocrMsg)
         {
@@ -467,7 +463,10 @@ namespace CD1HW.Controllers
             return "0";
         }
 
-
+        /// <summary>
+        /// 서명패드 취소 -> 취소 flag 업데이트
+        /// </summary>
+        /// <returns>현제 완료 스테이터스따른 결과값 (front단에서 처리위함)</returns>
         [HttpGet("/cancel_padandfinger")]
         public string CancelSignnFinger()
         {

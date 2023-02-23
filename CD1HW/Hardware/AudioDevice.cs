@@ -13,6 +13,9 @@ using Windows.ApplicationModel.VoiceCommands;
 
 namespace CD1HW.Hardware
 {
+    /// <summary>
+    /// 오디오장치 접근을 위한 class
+    /// </summary>
     public class AudioDevice
     {
         private readonly ILogger<AudioDevice> _logger;
@@ -32,21 +35,28 @@ namespace CD1HW.Hardware
         private WaveFileWriter waveFile;
         private WasapiOut wasapiOut;
 
+        /// <summary>
+        /// 음성파일 출력
+        /// </summary>
+        /// <param name="waveFilepath">출력할 음성파일의 경로</param>
         public void PlaySound(string waveFilepath)
         {
-            if (outputDevice == null)
-                SelectOutputDevice();
+            //if (outputDevice == null)
+            //    outputDevice = SelectOutputDevice("USB Audio Device");
             AudioFileReader audioFileReader = new AudioFileReader(waveFilepath);
-
-            wasapiOut = new WasapiOut(outputDevice, AudioClientShareMode.Shared, false, 0);
+            wasapiOut = new WasapiOut(AudioClientShareMode.Shared, false, 0);
+            //swasapiOut = new WasapiOut(outputDevice, AudioClientShareMode.Shared, false, 0);
             wasapiOut.Init(audioFileReader);
             wasapiOut.Play();
+
+            //동기 처리시의 코드 (사용x)
             /*while (wasapiOut.PlaybackState == PlaybackState.Playing)
             {
                 Thread.Sleep(500);
             }*/
         }
 
+        // 출력중인 음성 정지
         public void StopSound()
         {
             try
@@ -58,10 +68,20 @@ namespace CD1HW.Hardware
             }
         }
 
+        /// <summary>
+        /// 음성 녹음
+        /// </summary>
+        /// <param name="saveFilePath">녹음된 음성파일의 path</param>
+        /// <returns>NAudio.Wave.WaveInEvent</returns>
         public WaveInEvent RecordStart(string saveFilePath)
         {
             if (inputDeviceIdx == -1)
-                SelectInputDevice();
+                inputDeviceIdx = SelectInputDevice("USB Audio Device");
+            if (inputDeviceIdx == -1)
+            {
+                _logger.LogInformation("Audio Input Device Not Found");
+                return null;
+            }
             waveSource = new WaveInEvent();
             waveSource.DeviceNumber = inputDeviceIdx;
             waveSource.WaveFormat = new WaveFormat(44100, 1);
@@ -77,6 +97,11 @@ namespace CD1HW.Hardware
             return waveSource;
         }
 
+        /// <summary>
+        /// 음성녹음 완료시의 EventHandler 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void DataAvailable(object sender, WaveInEventArgs e)
         {
             if (waveFile != null)
@@ -86,6 +111,11 @@ namespace CD1HW.Hardware
             }
         }
 
+        /// <summary>
+        /// 음성녹음 중지시의 EventHandler 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void RecordStop(object sender, StoppedEventArgs e)
         {
             if (waveSource != null)
@@ -103,51 +133,45 @@ namespace CD1HW.Hardware
 
         }
 
-        public void SelectInputDevice()
+        /// <summary>
+        /// device 이름으로 음성 녹음 device 선택
+        /// </summary>
+        /// <param name="deviceName">선택할 input device의 이름</param>
+        /// <returns>audio device의 index</returns>
+        public int SelectInputDevice(string deviceName)
         {
             for (int idx = 0; idx < WaveIn.DeviceCount; ++idx)
             {
                 string devName = WaveIn.GetCapabilities(idx).ProductName;
-                if (devName.Contains("USB Audio Device"))
+                if (devName.Contains(deviceName))
                 {
-                    inputDeviceIdx = idx;
-                    break;
+                    _logger.LogInformation("Audio In : " + devName);
+                    return idx;
                 }
             }
-            if (inputDeviceIdx == -1)
-            {
-                //_logger.LogInformation("Audio Input Device Not Found");
-
-            }
-            else
-            {
-                //_logger.LogInformation("Audio In : " + WaveIn.GetCapabilities(inputDeviceIdx).ProductName);
-            }
+            return -1;
         }
 
-        public void SelectOutputDevice()
+        /// <summary>
+        /// 음성 출력 디바이스 선택
+        /// </summary>
+        /// <param name="deviceName">검색할 output device의 이름</param>
+        /// <returns>MMDevice</returns>
+        public MMDevice SelectOutputDevice(string deviceName)
         {
             MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
 
             foreach (MMDevice device in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All))
             {
-                if (device.FriendlyName.Contains("USB Audio Device") && device.State == DeviceState.Active)
+                if (device.FriendlyName.Contains(deviceName) && device.State == DeviceState.Active)
                 {
-                    outputDevice = device;
+                    _logger.LogInformation("Audio out : " + outputDevice.DeviceFriendlyName);
+                    return device;
                 }
             }
-
-            if (outputDevice == null)
-            {
-                //_logger.LogInformation("Audio output Device Not Found");
-                Console.WriteLine("sonund deivice not found");
-            }
-            else
-            {
-                //_logger.LogInformation("Audio out : " + outputDevice.DeviceFriendlyName);
-                Console.WriteLine(outputDevice.FriendlyName);
-            }
+            _logger.LogInformation("Audio output Device Not Found");
             enumerator.Dispose();
+            return null;
         }
     }
 }

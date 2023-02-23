@@ -8,6 +8,12 @@ using CsvHelper.Configuration.Attributes;
 
 namespace CD1HW
 {
+    /// <summary>
+    /// 선관위 데모용 주소 db 엑셀 read
+    /// 선관위로 부터 이름, 개인식별번호, 주소 순으로 기록된 데모용 엑셀 파일 제공
+    /// 선관의 데모시 주소의 ocr은 실행하지 않고 이름, 개인식별번호를 key로 엘셀내에서 주소를 서치
+    /// 실제 제춤구현시에는 이름, 개인식별번호의 ocr정보를 key로 선거인 관리 명부 시스템으로 부터 주소를 받도록 구성
+    /// </summary>
     public class NecDemoExcel
     {
         private readonly AppSettings? _options;
@@ -20,6 +26,11 @@ namespace CD1HW
             _necDemoAddr = new List<Person>();
         }
 
+        /// <summary>
+        /// application에 기재된 path에 있는 엑셀파일 read -> 리스트 저장
+        /// MiniExcel라이브러리가 csv도 지원하나, 개발 일정상 데모일자에 따른 리스크도 있어 csv리더는 기존 구현한 방식을 사용.
+        /// csv는 utf-8인코딩만 지원 (특정 사이트에대한 데모사양임으로 필요이상의 리스크 요소는 배제)
+        /// </summary>
         public void ReadDoc()
         {
             string NecDemoFilePath = _options.NecDemoFilePath;
@@ -89,7 +100,14 @@ namespace CD1HW
             }
             return "";
         }
-
+        
+        /// <summary>
+        /// 저장된 주소 리스트에서 검색
+        /// </summary>
+        /// <param name="name">이름</param>
+        /// <param name="regnum">주민번호</param>
+        /// <param name="birth">생년월일</param>
+        /// <returns>조건에 적합한 인물 list</returns>
         public List<Person> GetAddr(string name, string regnum, string birth)
         {
             name = name.Replace("-", "").Replace(".", "").Replace(" ", "").Replace("(", "").Replace(")", "");
