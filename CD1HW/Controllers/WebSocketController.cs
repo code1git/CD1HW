@@ -12,11 +12,12 @@ using OpenCvSharp.Extensions;
 
 namespace WebSocketsSample.Controllers;
 
-/* websoket controller
- * websoket를 통해 현재의 status를 매 요청동안 전송
- * client side에서 요청을 받으면 현재의 camera frame과 보관하고있는 ocr정보등을 전송
- * client에서는 받은 데이터로부터 원하는 정보는 parsing하여 사용
- */
+/// <summary>
+/// websoket controller
+/// websoket를 통해 현재의 status를 매 요청동안 전송
+/// client side에서 요청을 받으면 현재의 camera frame과 보관하고있는 ocr정보등을 전송
+/// client에서는 받은 데이터로부터 원하는 정보는 parsing하여 사용
+/// </summary>
 public class WebSocketController : ControllerBase
 {
     private readonly ILogger<WebSocketController> _logger;
@@ -51,8 +52,11 @@ public class WebSocketController : ControllerBase
             HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         }
     }
-    // </snippet>
-
+    /// <summary>
+    /// 카메라 스트림 + ocr데이터 ws를 통해 전송
+    /// </summary>
+    /// <param name="webSocket"></param>
+    /// <returns></returns>
     private async Task StreamCamera(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
