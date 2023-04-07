@@ -28,8 +28,8 @@ function update_scanner_view() {
     };
     ws.onmessage = function (message) {
         data = JSON.parse(message.data);
-        if (data.imgBase64Str != null && data.imgBase64Str != "") {
-            let imgBase64 = "data:image/jpeg;base64," + data.imgBase64Str;
+        if (data.imageBase64 != null && data.imageBase64 != "") {
+            let imgBase64 = "data:image/jpeg;base64," + data.imageBase64;
             document
                 .getElementById("card_scanner_view")
                 .setAttribute("src", imgBase64);

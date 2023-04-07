@@ -6,6 +6,7 @@ using System.Text.Json;
 using CD1HW;
 using CD1HW.Controllers;
 using CD1HW.Hardware;
+using CD1HW.Model;
 using Microsoft.AspNetCore.Mvc;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
@@ -66,22 +67,11 @@ public class WebSocketController : ControllerBase
         while (!receiveResult.CloseStatus.HasValue)
         {
             //byte[] msgBuf = Encoding.UTF8.GetBytes(AppSettings.imgBase64Str);
-            WsMsg wsMsg = new WsMsg();
-        
-            wsMsg.imgBase64Str = _ocrCamera.imgBase64Str;
-            wsMsg.name = _ocrCamera.name;
-            wsMsg.regnum = _ocrCamera.regnum;
-            wsMsg.addr = _ocrCamera.addr;
-            wsMsg.birth = _ocrCamera.birth;
-            wsMsg.sex = _ocrCamera.sex;
-            wsMsg.name_img = _ocrCamera.name_img;
-            wsMsg.regnum_img = _ocrCamera.regnum_img;
-            wsMsg.face_img = _ocrCamera.face_img;
-            wsMsg.masking_img = _ocrCamera.masking_img;
-            wsMsg.sign_img= _ocrCamera.sign_img;
-            wsMsg.finger_img = _ocrCamera.finger_img;
+            OcrResult ocrResult = _ocrCamera.ocrResult;
+            ocrResult.imageBase64 = _ocrCamera.imageBase64;
             
-            byte[] msgBuf = JsonSerializer.SerializeToUtf8Bytes<WsMsg>(wsMsg);
+            
+            byte[] msgBuf = JsonSerializer.SerializeToUtf8Bytes(_ocrCamera.ocrResult);
 
 
 

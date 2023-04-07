@@ -1,4 +1,5 @@
-﻿using CD1HW.Hardware;
+﻿using CD1HW.Grpc;
+using CD1HW.Hardware;
 using OpenCvSharp;
 using System;
 using System.Collections.Generic;
@@ -18,19 +19,23 @@ namespace CD1HW.WinFormUi
         private DemoUI demoUI;
         private readonly Cv2Camera _cv2Camera;
         private readonly OcrCamera _ocrCamera;
-        public NotifyIconForm(Cv2Camera cv2Camera, OcrCamera ocrCamera)
+        private readonly IServiceProvider _serviceProvider;
+
+        public NotifyIconForm(Cv2Camera cv2Camera, OcrCamera ocrCamera, IdScanRpcClient idScanRpcClient, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _cv2Camera = cv2Camera;
             _ocrCamera = ocrCamera;
+            _serviceProvider = serviceProvider;
 
             if (_ocrCamera.DemoUIOnStart)
             {
-                demoUI = new DemoUI(ocrCamera);
+                //demoUI = new DemoUI(ocrCamera, idScanRpcClient);
+                demoUI = _serviceProvider.GetRequiredService<DemoUI>();
                 demoUI.Show();
             }
 
-            switch (_ocrCamera.CamIdx)
+            switch (_cv2Camera._camIdx)
             {
                 case 0:
                     sel_cam_0.Checked = true;
@@ -58,14 +63,15 @@ namespace CD1HW.WinFormUi
         {
             if (demoUI == null || demoUI.IsDisposed)
             {
-                demoUI = new DemoUI(_ocrCamera);
+                //demoUI = new DemoUI(_ocrCamera, _idScanRpcClient);
+                demoUI = _serviceProvider.GetRequiredService<DemoUI>();
                 demoUI.Show();
             }
         }
 
         private void sel_cam_0_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _ocrCamera.CamIdx = 0;
+            _cv2Camera._camIdx = 0;
             lock (_cv2Camera)
             {
                 _cv2Camera.ResetCamera();
@@ -77,7 +83,7 @@ namespace CD1HW.WinFormUi
 
         private void sel_cam_1_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _ocrCamera.CamIdx = 1;
+            _cv2Camera._camIdx = 1;
             lock (_cv2Camera)
             {
                 _cv2Camera.ResetCamera();
@@ -89,7 +95,7 @@ namespace CD1HW.WinFormUi
 
         private void sel_cam_2_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _ocrCamera.CamIdx = 2;
+            _cv2Camera._camIdx = 2;
             lock (_cv2Camera)
             {
                 _cv2Camera.ResetCamera();
@@ -101,12 +107,12 @@ namespace CD1HW.WinFormUi
 
         private void dSSHOWToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _ocrCamera.CameraBackEnd = VideoCaptureAPIs.DSHOW;
+            _cv2Camera._cameraBackEnd = VideoCaptureAPIs.DSHOW;
         }
 
         private void mSMFToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _ocrCamera.CameraBackEnd = VideoCaptureAPIs.MSMF;
+            _cv2Camera._cameraBackEnd = VideoCaptureAPIs.MSMF;
         }
     }
 }

@@ -16,10 +16,10 @@ namespace CD1HW
     /// </summary>
     public class NecDemoExcel
     {
-        private readonly AppSettings? _options;
+        private readonly Appsettings? _options;
         private readonly ILogger<NecDemoExcel> _logger;
         private List<Person> _necDemoAddr;
-        public NecDemoExcel(ILogger<NecDemoExcel> logger, IOptions<AppSettings> options)
+        public NecDemoExcel(ILogger<NecDemoExcel> logger, IOptions<Appsettings> options)
         {
             _logger = logger;
             _options = options.Value;

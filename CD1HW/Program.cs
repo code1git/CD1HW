@@ -1,76 +1,82 @@
-using CD1HW;
-using CD1HW.Grpc;
+ï»¿using CD1HW.Grpc;
 using CD1HW.Hardware;
 using CD1HW.WinFormUi;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 /*
  * Code1HW
- * ½ÅºĞÁõ ÀÎ½Ä±â hardware contrller program
+ * ì‹ ë¶„ì¦ ì¸ì‹ê¸° hardware contrller program
  * 
- * ÁÖ¿ä±â´É
- * ½ÅºĞÁõ ÀÎ½Ä±â¿¡ ºÎ¼ÓµÈ ÇÏµå¿ş¾îÀÇ ÄÁÆ®·Ñ (Ä«¸Ş¶ó, ¼­¸íÆĞµå, Áö¹®ÀÎ½Ä±â, ½ºÇÇÄ¿)
- * Ä«¸Ş¶óÀÇ frameÀ» ocr¿£Áø¿¡ Àü´ŞÇÏ°í, ocr °á°ú¸¦ Àü¼Û¹ŞÀ½
- * windows»óÀÇ UI
- * web ui¸¦ À§ÇÑ µ¥ÀÌÅÍ¸¦ websocket¸¦ ÅëÇØ Àü¼Û
+ * ì£¼ìš”ê¸°ëŠ¥
+ * ì‹ ë¶„ì¦ ì¸ì‹ê¸°ì— ë¶€ì†ëœ í•˜ë“œì›¨ì–´ì˜ ì»¨íŠ¸ë¡¤ (ì¹´ë©”ë¼, ì„œëª…íŒ¨ë“œ, ì§€ë¬¸ì¸ì‹ê¸°, ìŠ¤í”¼ì»¤)
+ * ì¹´ë©”ë¼ì˜ frameì„ ocrì—”ì§„ì— ì „ë‹¬í•˜ê³ , ocr ê²°ê³¼ë¥¼ ì „ì†¡ë°›ìŒ
+ * windowsìƒì˜ UI
+ * web uië¥¼ ìœ„í•œ ë°ì´í„°ë¥¼ websocketë¥¼ í†µí•´ ì „ì†¡
  * 
- * ÀüÃ¼±¸Á¶
- * ASP.NET core frameworkÀ» ±âº» º£ÀÌ½º·Î »ç¿ë (¸ğµç object´Â ÀÇÁ¸¼º ÁÖÀÔ(DI) ÆĞÅÏÀ» Àû¿ëÇÏ¿© »ç¿ëÇÏ´Â°ÍÀ» ¿øÄ¢À¸·Î ÇÔ)
- * ÇÁ·Î±×·¥ ±âµ¿Áß »ó½Ã ÀÛµ¿µÇ¿©¾ß ÇÏ´Â Ä«¸Ş¶ó / ¼­¸íÆĞµå´Â Service Provider¿¡ µî·ÏÈÄ Thread·Î ÀÛµ¿
- * OcrCamera object¸¦ ÀüÃ¼ µ¥ÀÌÅÍÀÇ ÄÁÆ®·Ñ¿¡ »ç¿ë
+ * ì „ì²´êµ¬ì¡°
+ * ASP.NET core frameworkì„ ê¸°ë³¸ ë² ì´ìŠ¤ë¡œ ì‚¬ìš© (ëª¨ë“  objectëŠ” ì˜ì¡´ì„± ì£¼ì…(DI) íŒ¨í„´ì„ ì ìš©í•˜ì—¬ ì‚¬ìš©í•˜ëŠ”ê²ƒì„ ì›ì¹™ìœ¼ë¡œ í•¨)
+ * í”„ë¡œê·¸ë¨ ê¸°ë™ì¤‘ ìƒì‹œ ì‘ë™ë˜ì—¬ì•¼ í•˜ëŠ” ì¹´ë©”ë¼ / ì„œëª…íŒ¨ë“œëŠ” Service Providerì— ë“±ë¡í›„ Threadë¡œ ì‘ë™
+ * OcrCamera objectë¥¼ ì „ì²´ ë°ì´í„°ì˜ ì»¨íŠ¸ë¡¤ì— ì‚¬ìš©
  */
 namespace CD1HW
 {
 
     public class Program
     {
-        // DI object »ç¿ëÀ» À§ÇØ °¢ ¸ğµâÀÇ object´Â Service Provider¸¦ ÅëÇØ ¹Ş´Â´Ù.
+        // DI object ì‚¬ìš©ì„ ìœ„í•´ ê° ëª¨ë“ˆì˜ objectëŠ” Service Providerë¥¼ í†µí•´ ë°›ëŠ”ë‹¤.
         public static IServiceProvider ServiceProvider { get; set; }
 
         //[STAThread]
         /// <summary>
-        /// web server±âµ¿ ¹× ±âµ¿½Ã µ¿ÀÛÇØ¾ßÇÏ´Â ´Ù¸¥ threadÀÇ µ¿ÀÛ ¼±¾ğ
-        /// AudioDevice¿¡ »ç¿ëµÈ NAudio¶óÀÌºê·¯¸®ÀÇ µğ¹ÙÀÌ½º ¼±ÅÃÀÌ STA thread»ó¿¡¼­ ÀÛµ¿ ÇÏÁö ¾ÊÀ½À¸·Î »ç¿ë x
+        /// web serverê¸°ë™ ë° ê¸°ë™ì‹œ ë™ì‘í•´ì•¼í•˜ëŠ” ë‹¤ë¥¸ threadì˜ ë™ì‘ ì„ ì–¸
+        /// AudioDeviceì— ì‚¬ìš©ëœ NAudioë¼ì´ë¸ŒëŸ¬ë¦¬ì˜ ë””ë°”ì´ìŠ¤ ì„ íƒì´ STA threadìƒì—ì„œ ì‘ë™ í•˜ì§€ ì•ŠìŒìœ¼ë¡œ ì‚¬ìš© x
         /// </summary>
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            // À¥¼­¹ö ±âµ¿, ¼¼ºÎ¼³Á¤Àº Startup.cs
+            JsonSerializerOptions options = new()
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+
+            // ì›¹ì„œë²„ ê¸°ë™, ì„¸ë¶€ì„¤ì •ì€ Startup.cs
             IWebHost webHost = CreateWebHostBuilder(args).Build();
             webHost.RunAsync();
 
             ServiceProvider = webHost.Services;
 
-            // Ä«¸Ş¶ó Thread
+            // ì¹´ë©”ë¼ Thread
             Cv2Camera cv2Camera= ServiceProvider.GetRequiredService<Cv2Camera>();
             cv2Camera.CameraStart();
             
-            // ¼±°üÀ§ µ¥¸ğ¿ë excel/csv ÀĞ±â (¸Ş¸ğ¸®¿¡ ¸®½ºÆ® ÀúÀå)
-            NecDemoExcel necDemoExcel = ServiceProvider.GetRequiredService<NecDemoExcel>();
-            necDemoExcel.ReadDoc();
+            // ì„ ê´€ìœ„ ë°ëª¨ìš© excel/csv ì½ê¸° (ë©”ëª¨ë¦¬ì— ë¦¬ìŠ¤íŠ¸ ì €ì¥)
+            /*NecDemoExcel necDemoExcel = ServiceProvider.GetRequiredService<NecDemoExcel>();
+            necDemoExcel.ReadDoc();*/
 
-            // Wacom ¼­¸íÆĞµå(STU Libary)
-            // device input¿¡ ´ëÇÑ callbackÀ» ¹Ş±âÀ§ÇØ thread¸¦ À¯Áö ½ÃÅ²´Ù.
-            WacomSTU wacomSTU = ServiceProvider.GetRequiredService<WacomSTU>();
+            // Wacom ì„œëª…íŒ¨ë“œ(STU Libary)
+            // device inputì— ëŒ€í•œ callbackì„ ë°›ê¸°ìœ„í•´ threadë¥¼ ìœ ì§€ ì‹œí‚¨ë‹¤.
+            /*WacomSTU wacomSTU = ServiceProvider.GetRequiredService<WacomSTU>();
             Thread signPadThread = new Thread(() => wacomSTU.StartPad());
-            signPadThread.Start();
+            signPadThread.Start();*/
 
-            //±âµ¿½ÃÀÇ ±âµ¿À½ Ãâ·Â
-            AudioDevice audioDevice = ServiceProvider.GetRequiredService<AudioDevice>();
-            try
-            {
-                audioDevice.PlaySound(@"./Media/DiviceInit.wav");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.StackTrace);
-            }
+            //ê¸°ë™ì‹œì˜ ê¸°ë™ìŒ ì¶œë ¥
+            //AudioDevice audioDevice = ServiceProvider.GetRequiredService<AudioDevice>();
+            //audioDevice.PlaySound(@"./Media/DiviceInit.wav");
+     
 
-            // UI (Æ®·¹ÀÌ ¾ÆÀÌÄÜ)
+            SerialService serialService = ServiceProvider.GetRequiredService<SerialService>();
+            serialService.CheckSerialPort();
+            serialService.StartSerialService();
+
+
+            // UI (íŠ¸ë ˆì´ ì•„ì´ì½˜)
             Application.EnableVisualStyles();
-            Thread UiThread = new Thread(() => { Application.Run(new NotifyIconForm(cv2Camera, ServiceProvider.GetRequiredService<OcrCamera>())); });
+            Thread UiThread = new Thread(() => { Application.Run(ServiceProvider.GetRequiredService<NotifyIconForm>()); });
             UiThread.IsBackground = true;
             UiThread.Start();
+
         }
 
         // web host builder(kestrel)
@@ -80,16 +86,10 @@ namespace CD1HW
             .UseStartup<Startup>()
             .ConfigureKestrel(serverOptions =>
             {
-                // http interface¿ë
+                // http interface
                 serverOptions.Listen(System.Net.IPAddress.Any, 5120, ListenOptions =>
                 {
                     ListenOptions.Protocols = HttpProtocols.Http1;
-                });
-
-                // grpc¿ë
-                serverOptions.Listen(System.Net.IPAddress.Any, 5122, ListenOptions =>
-                {
-                    ListenOptions.Protocols = HttpProtocols.Http2;
                 });
             });
     }

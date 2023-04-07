@@ -8,7 +8,9 @@
     // orc result 4 demo paramater
     public class OcrResult
     {
+        public string imageBase64 { get; set; }
         public string ocr_text { get; set; }
+        public long ocr_timemill { get; set; }
         // id card
         public string id_card_type { get; set; }
         public string name { get; set; }
@@ -31,6 +33,15 @@
         public string approval_num { get; set; }
         public string trading_date { get; set; }
         public string total_amount { get; set; }
+        // ocr result img
+        public string name_img { get; set; }
+        public string regnum_img { get; set; }
+        public string face_img { get; set; }
+        public string birth_img { get; set; }
+        public string masking_img { get; set; }
+
+        //qr result
+        public string qrResult { get; set; }
     }
     public class ResultImg
     {

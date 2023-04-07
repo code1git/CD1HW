@@ -41,19 +41,27 @@ namespace CD1HW.Hardware
         /// <param name="waveFilepath">출력할 음성파일의 경로</param>
         public void PlaySound(string waveFilepath)
         {
-            //if (outputDevice == null)
-            //    outputDevice = SelectOutputDevice("USB Audio Device");
-            AudioFileReader audioFileReader = new AudioFileReader(waveFilepath);
-            wasapiOut = new WasapiOut(AudioClientShareMode.Shared, false, 0);
-            //swasapiOut = new WasapiOut(outputDevice, AudioClientShareMode.Shared, false, 0);
-            wasapiOut.Init(audioFileReader);
-            wasapiOut.Play();
-
-            //동기 처리시의 코드 (사용x)
-            /*while (wasapiOut.PlaybackState == PlaybackState.Playing)
+            try
             {
-                Thread.Sleep(500);
-            }*/
+                //if (outputDevice == null)
+                //    outputDevice = SelectOutputDevice("USB Audio Device");
+                AudioFileReader audioFileReader = new AudioFileReader(waveFilepath);
+                wasapiOut = new WasapiOut(AudioClientShareMode.Shared, false, 0);
+                //swasapiOut = new WasapiOut(outputDevice, AudioClientShareMode.Shared, false, 0);
+                wasapiOut.Init(audioFileReader);
+                wasapiOut.Play();
+
+                //동기 처리시의 코드 (사용x)
+                /*while (wasapiOut.PlaybackState == PlaybackState.Playing)
+                {
+                    Thread.Sleep(500);
+                }*/
+
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         // 출력중인 음성 정지

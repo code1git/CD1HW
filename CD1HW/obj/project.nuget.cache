@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6qk6sfPCAYlHt7lyXlSvk8W6aDh6dpNAHnTP7C9WDGsbNtfx69OKZvzR5G+4Jln9+ojCgVb7upi0c1rrxT1xSQ==",
+  "dgSpecHash": "kttaoLczPBEdf8gn2ZTrXA1OXOIetwBE9hTJRqBT02d3Gkdz3cZoB1KweweFGmLqeFwLjUDDpNlktMyZal5IXw==",
   "success": true,
   "projectFilePath": "D:\\BH\\workspace\\CD1HW\\CD1HW\\CD1HW.csproj",
   "expectedPackageFiles": [
@@ -31,7 +31,6 @@
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
-    "C:\\Users\\yousu\\.nuget\\packages\\microsoft.visualstudio.sdk.embedinteroptypes\\15.0.16\\microsoft.visualstudio.sdk.embedinteroptypes.15.0.16.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
@@ -85,7 +84,6 @@
     "C:\\Users\\yousu\\.nuget\\packages\\sharpdx\\4.2.0\\sharpdx.4.2.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\sharpdx.dxgi\\4.2.0\\sharpdx.dxgi.4.2.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\sharpdx.mediafoundation\\4.2.0\\sharpdx.mediafoundation.4.2.0.nupkg.sha512",
-    "C:\\Users\\yousu\\.nuget\\packages\\stdole\\7.0.3303\\stdole.7.0.3303.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
@@ -153,16 +151,5 @@
     "C:\\Users\\yousu\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\yousu\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.17763.27\\microsoft.windows.sdk.net.ref.10.0.17763.27.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'stdole 7.0.3303' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows10.0.17763'. This package may not be fully compatible with your project.",
-      "libraryId": "stdole",
-      "targetGraphs": [
-        "net6.0-windows10.0.17763"
-      ]
-    }
-  ]
+  "logs": []
 }

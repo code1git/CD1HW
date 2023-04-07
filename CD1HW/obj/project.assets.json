@@ -413,12 +413,6 @@
           }
         }
       },
-      "Microsoft.VisualStudio.SDK.EmbedInteropTypes/15.0.16": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets": {}
-        }
-      },
       "Microsoft.Win32.Primitives/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -1191,18 +1185,6 @@
           "lib/netstandard1.1/SharpDX.MediaFoundation.dll": {
             "related": ".pdb;.xml"
           }
-        }
-      },
-      "stdole/7.0.3303": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.VisualStudio.SDK.EmbedInteropTypes": "15.0.16"
-        },
-        "compile": {
-          "lib/net10/stdole.dll": {}
-        },
-        "runtime": {
-          "lib/net10/stdole.dll": {}
         }
       },
       "Swashbuckle.AspNetCore/6.5.0": {
@@ -3277,18 +3259,6 @@
         "microsoft.openapi.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.SDK.EmbedInteropTypes/15.0.16": {
-      "sha512": "UYl5Xn+UItk83oGbVR1+H3M8ndhDmbLqYVNv+qrqbC+h3YvnAPlhi+q4V4KAcRBU4kENznU3czVATz2bUhi9qQ==",
-      "type": "package",
-      "path": "microsoft.visualstudio.sdk.embedinteroptypes/15.0.16",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets",
-        "microsoft.visualstudio.sdk.embedinteroptypes.15.0.16.nupkg.sha512",
-        "microsoft.visualstudio.sdk.embedinteroptypes.nuspec"
-      ]
-    },
     "Microsoft.Win32.Primitives/4.3.0": {
       "sha512": "9ZQKCWxH7Ijp9BfahvL2Zyf1cJIk8XYLF6Yjzr2yi0b2cOut/HQ31qf1ThHAgCc3WiZMdnWcfJCgN82/0UunxA==",
       "type": "package",
@@ -4226,18 +4196,6 @@
         "lib/uap10.0/SharpDX.MediaFoundation.xml",
         "sharpdx.mediafoundation.4.2.0.nupkg.sha512",
         "sharpdx.mediafoundation.nuspec"
-      ]
-    },
-    "stdole/7.0.3303": {
-      "sha512": "sYtTTJPFd0xljptm4QlZNFAUFbWMEO78ZXCqzHJD1pTUiM1WHpOiyirxUvNbGsruoiNNOAKwlfWcdT7o4cTeig==",
-      "type": "package",
-      "path": "stdole/7.0.3303",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net10/stdole.dll",
-        "stdole.7.0.3303.nupkg.sha512",
-        "stdole.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore/6.5.0": {
@@ -7641,8 +7599,7 @@
       "SharpDX.MediaFoundation >= 4.2.0",
       "Swashbuckle.AspNetCore >= 6.5.0",
       "System.IO.Ports >= 7.0.0",
-      "System.Text.Json >= 7.0.1",
-      "stdole >= 7.0.3303"
+      "System.Text.Json >= 7.0.1"
     ]
   },
   "packageFolders": {
@@ -7763,10 +7720,6 @@
           "System.Text.Json": {
             "target": "Package",
             "version": "[7.0.1, )"
-          },
-          "stdole": {
-            "target": "Package",
-            "version": "[7.0.3303, )"
           }
         },
         "imports": [
@@ -7803,17 +7756,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'stdole 7.0.3303' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows10.0.17763'. This package may not be fully compatible with your project.",
-      "libraryId": "stdole",
-      "targetGraphs": [
-        "net6.0-windows10.0.17763"
-      ]
-    }
-  ]
+  }
 }

@@ -24,20 +24,24 @@ namespace CD1HW
         public void ConfigureServices(IServiceCollection services)
         {
             // 프로그램에 사용될 object를 선언
-            services.Configure<AppSettings>(Configuration.GetSection(AppSettings.Settings));
+            services.Configure<Appsettings>(Configuration.GetSection(Appsettings.Settings));
             services.AddOptions();
             services.AddControllers();
+            services.AddMvc().AddJsonOptions(opction =>
+            {
+                opction.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            });
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.AddGrpc();
             services.AddSingleton<OcrCamera>();
             services.AddSingleton<AudioDevice>();
             services.AddSingleton<Cv2Camera>();
             services.AddSingleton<AudioDevice>();
-            services.AddScoped<NotifyIconForm>();
-            services.AddSingleton<NecDemoExcel>();
+            services.AddTransient<NotifyIconForm>();
+            services.AddTransient<DemoUI>();
+            //services.AddSingleton<NecDemoExcel>();
             services.AddSingleton<IzzixFingerprint>();
-            services.AddSingleton<WacomSTU>();
+            //services.AddSingleton<WacomSTU>();
             services.AddCors(opctions =>
             {
                 opctions.AddDefaultPolicy(policy =>
@@ -45,6 +49,8 @@ namespace CD1HW
                     policy.AllowAnyOrigin().AllowAnyHeader();
                 });
             });
+            services.AddSingleton<SerialService>();
+            services.AddSingleton<IdScanRpcClient>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -65,17 +71,15 @@ namespace CD1HW
                 KeepAliveInterval = TimeSpan.FromMinutes(2)
             };
             
+
             
             app.UseWebSockets(webSocketOptions);
             app.UseCors();
 
             app.UseRouting();
 
-            // endpoint에 grpc선언 -> grpc를 통해 ocr engine과 통신
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<CamerabufService>();
-                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client."); });
                 endpoints.MapControllers();
             });
 

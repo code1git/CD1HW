@@ -118,10 +118,6 @@
             "System.Text.Json": {
               "target": "Package",
               "version": "[7.0.1, )"
-            },
-            "stdole": {
-              "target": "Package",
-              "version": "[7.0.3303, )"
             }
           },
           "imports": [
